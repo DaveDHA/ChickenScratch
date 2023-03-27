@@ -1,5 +1,3 @@
-﻿namespace ChickenScratch
+﻿module ChickenScratch.Scratch
 
-module Say =
-    let hello name =
-        printfn "Hello %s" name
+let hi = "hi"

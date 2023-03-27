@@ -4,6 +4,7 @@
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="CodeGeneration.fs" />
     <Compile Include="Facade.fs" />
   </ItemGroup>
 </Project>
