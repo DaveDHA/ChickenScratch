@@ -24,23 +24,28 @@ module Test =
         }
 
     let doc =
-        div {
-            div {
-                _class "fakeHead"
-                style {
-                    ".mainHeader { color: red }"
-                    ".mainDiv { border: solid 5px green ; background: white ; color : black ; padding: 0px 10px }"
-                }
-                ScratchStyle.FromScratchResource "ChickenScratch.Resources.TreeTable.css"
-                ScratchScript.FromScratchResource "ChickenScratch.Resources.TreeTable.js"
+        div {            
+            style { """
+                .mainHeader { color: red }
+
+                .mainDiv {
+                    border: solid 5px green;
+                    background: white;
+                    color: black;
+                    padding: 0px 10px;
+                }"""                    
             }
+            
+            // ScratchStyle.FromScratchResource "ChickenScratch.Resources.TreeTable.css"
+            // ScratchScript.FromScratchResource "ChickenScratch.Resources.TreeTable.js"
+            
             div {
                 _class "mainDiv"                
                 h1 { 
                     "This is a test document for Chicken Scratch" 
                     _class "mainHeader"
                 }
-                h2 { "Embedded Resources" }
+                h2 { "Embedded Resources" ; _style "text-decoration: underline" }
                 
                 getResourceList()                
             }
