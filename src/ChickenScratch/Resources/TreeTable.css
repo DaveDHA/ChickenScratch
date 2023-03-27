@@ -1,0 +1,28 @@
+.chickenscratch_treetable { 
+    border-collapse: collapse;
+    border: solid 1px gray;
+    background-color: white;
+    margin: 10px;
+    padding: 10px;
+    color: black;
+ }
+.chickenscratch_treetable td,
+.chickenscratch_treetable th { 
+    padding-left: 15px; 
+    padding-right: 15px; 
+    border-left: solid 1px gray; 
+    border-right: solid 1px gray;
+    text-align: left;
+}
+.chickenscratch_treetable td.azdocc_alignright,
+.chickenscratch_treetable th.azdocc_alignright { 
+    text-align: right 
+}
+.chickenscratch_treetable th { border: solid 1px gray }
+.chickenscratch_treetable_feature .chickenscratch_treetable_firstcol { padding-left: 45px }
+.chickenscratch_treetable_pbi .chickenscratch_treetable_firstcol { padding-left: 75px }
+.chickenscratch_treetable_expanded .chickenscratch_treetable_firstcol::before { content : '[-]' ; margin-right: 5px }          
+.chickenscratch_treetable_collapsed .chickenscratch_treetable_firstcol::before { content : '[+]' ; margin-right: 5px }
+.chickenscratch_treetable_expanded .chickenscratch_treetable_firstcol { cursor: pointer }       
+.chickenscratch_treetable_collapsed .chickenscratch_treetable_firstcol { cursor: pointer }       
+[data-chickenscratch-treetable-collapsedby] { display: none }
