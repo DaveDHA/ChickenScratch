@@ -15,8 +15,8 @@ module TestDocument =
     let build() =
         html { 
             head { 
-                ScratchStyle.FromScratchResource "ChickenScratch.Content.TreeTable.css"
-                ScratchScript.FromScratchResource "ChickenScratch.Content.TreeTable.js"
+                ScratchStyle.FromScratchResource "ChickenScratch.Resources.TreeTable.css"
+                ScratchScript.FromScratchResource "ChickenScratch.Resources.TreeTable.js"
             }
             body {
                 h1 { "This is a test document for Chicken Scratch"}
