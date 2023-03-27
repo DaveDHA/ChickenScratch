@@ -17,7 +17,7 @@ module Test =
     open ChickenScratch.ScratchTagExpressions
     let getResourceList() = 
         ul {
-            _style "color: skyblue"
+            _style "color: blue"
             yield!                
                 System.Reflection.Assembly.GetAssembly(typeof<ScratchNode>).GetManifestResourceNames()
                 |> Seq.map (fun resource -> li { resource })
@@ -28,8 +28,8 @@ module Test =
             div {
                 _class "fakeHead"
                 style {
-                    ".mainHeader { color: red}"
-                    ".mainDiv { border: solid 2px green }"
+                    ".mainHeader { color: red }"
+                    ".mainDiv { border: solid 5px green ; background: white ; color : black ; padding: 0px 10px }"
                 }
                 ScratchStyle.FromScratchResource "ChickenScratch.Resources.TreeTable.css"
                 ScratchScript.FromScratchResource "ChickenScratch.Resources.TreeTable.js"
@@ -48,6 +48,10 @@ module Test =
             hr { () }
         }
 
-(sprintf "%A" Test.doc).DisplayAs("text/html")
+#!fsharp
 
-printfn "%A" Test.doc
+Test.doc.ToString().DisplayAs("text/html")
+
+#!fsharp
+
+sprintf "%A" Test.doc
