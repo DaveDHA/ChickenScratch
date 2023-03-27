@@ -1,0 +1,53 @@
+#!meta
+
+{"kernelInfo":{"defaultKernelName":"csharp","items":[{"aliases":[],"name":"csharp"},{"aliases":[],"languageName":"fsharp","name":"fsharp"}]}}
+
+#!pwsh
+
+dotnet build ../ChickenScratch.sln
+
+#!fsharp
+
+#r "../ChickenScratch/bin/Debug/net7.0/ChickenScratch.dll"
+open ChickenScratch
+
+#!fsharp
+
+module Test =
+    open ChickenScratch.ScratchTagExpressions
+    let getResourceList() = 
+        ul {
+            _style "color: skyblue"
+            yield!                
+                System.Reflection.Assembly.GetAssembly(typeof<ScratchNode>).GetManifestResourceNames()
+                |> Seq.map (fun resource -> li { resource })
+        }
+
+    let doc =
+        div {
+            div {
+                _class "fakeHead"
+                style {
+                    ".mainHeader { color: red}"
+                    ".mainDiv { border: solid 2px green }"
+                }
+                ScratchStyle.FromScratchResource "ChickenScratch.Resources.TreeTable.css"
+                ScratchScript.FromScratchResource "ChickenScratch.Resources.TreeTable.js"
+            }
+            div {
+                _class "mainDiv"                
+                h1 { 
+                    "This is a test document for Chicken Scratch" 
+                    _class "mainHeader"
+                }
+                h2 { "Embedded Resources" }
+                
+                getResourceList()                
+            }
+
+            hr { () }
+        }
+
+(sprintf "%A" Test.doc).DisplayAs("text/html")
+
+printfn "%A" Test.doc
