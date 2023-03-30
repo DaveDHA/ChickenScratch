@@ -36,15 +36,9 @@ module Test =
                 }"""                    
             }
             
-            // ScratchStyle.FromScratchResource "ChickenScratch.Resources.TreeTable.css"
-            // ScratchScript.FromScratchResource "ChickenScratch.Resources.TreeTable.js"
-            
             div {
                 _class "mainDiv"                
-                h1 { 
-                    "This is a test document for Chicken Scratch" 
-                    _class "mainHeader"
-                }
+                h1 { "This is a test document for Chicken Scratch" ; _class "mainHeader" }
                 h2 { "Embedded Resources" ; _style "text-decoration: underline" }
                 
                 getResourceList()                
