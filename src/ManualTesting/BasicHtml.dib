@@ -54,3 +54,75 @@ Test.doc.ToString().DisplayAs("text/html")
 #!fsharp
 
 sprintf "%A" Test.doc
+
+#!markdown
+
+# Include an IScrachNodeSource
+
+#!fsharp
+
+module Test2 = 
+    open ChickenScratch
+    open ChickenScratch.ScratchTagExpressions
+    
+    type Employee = {
+        Id : int
+        Name : string
+        Email : string
+        ManagerOf : Employee list
+    }
+    with
+        interface ChickenScratch.IScratchNodeSource with
+            member this.GetScratchNodes() = [ 
+                ul {
+                    li {
+                        if (List.isEmpty this.ManagerOf) then _style "color: yellow" else _style "color: red"
+                        $"{this.Id}: "                    
+                        strong { $"{this.Name}: " }
+                        $"({this.Email})"
+                        if not (List.isEmpty this.ManagerOf) then yield! this.ManagerOf |> Seq.cast<IScratchNodeSource>
+                    }   
+                }
+            ]
+            member this.GetHtmlString() = failwith "Not implemented"
+
+    let molly = { Id = 1 ; Name = "Molly Manager" ; Email = "theboss@Test.com" ; ManagerOf = [
+        { Id = 10 ; Name = "Testy McTesterson" ; Email = "Testy@Test.com" ; ManagerOf = List.empty }
+        { Id = 11 ; Name = "Sam Sampleman" ; Email = "Sam@Test.com" ; ManagerOf = List.empty }
+        { Id = 12 ; Name = "Eleanor Example" ; Email = "Ellie@Test.com" ; ManagerOf = List.empty }
+    ]}
+    
+    let doc = 
+        div {
+            h1 { "Org Chart" }
+            molly            
+        }            
+
+Test2.doc.ToString().DisplayAs("text/html")
+
+#!markdown
+
+# Include an IScratchHtmlSource
+
+#!fsharp
+
+module Test3 = 
+    open ChickenScratch
+    open ChickenScratch.ScratchTagExpressions
+
+    type SampleControl = {
+        Color : string
+    }
+        with 
+            interface IScratchHtmlSource with
+                member this.GetHtmlString() = $"<span style='color: {this.Color}'>SampleControl</span>"
+
+    let doc = div {
+        h1 { "This is a test of adding an Html Source" }
+        { Color = "red" }
+        { Color = "green" }
+        { Color = "blue" }
+        h2 { "Did it work?" }
+    }
+
+Test3.doc.ToString().DisplayAs("text/html")

@@ -23,21 +23,29 @@ module ScratchNodeBuilder =
 
         member _.Yield (x : ScratchNodeBuilderNode) = [ x ]
 
-        member _.YieldFrom (x : ScratchNodeBuilderNode seq) = x |> List.ofSeq
+        member _.YieldFrom (xs : ScratchNodeBuilderNode seq) = xs |> List.ofSeq
 
         member this.Yield (x : ScratchElement) = x |> Element |> Child |> this.Yield
 
-        member this.YieldFrom (x : ScratchElement seq) = x |> Seq.map (Element >> Child) |> this.YieldFrom
+        member this.YieldFrom (xs : ScratchElement seq) = xs |> Seq.map (Element >> Child) |> this.YieldFrom
 
         member this.Yield (x : ScratchNode) = Child x |> this.Yield
 
-        member this.YieldFrom (x : ScratchNode seq) = x |> Seq.map Child |> this.YieldFrom
+        member this.YieldFrom (xs : ScratchNode seq) = xs |> Seq.map Child |> this.YieldFrom
 
         member this.Yield (x : string) = x |> Content |> this.Yield
 
-        member this.YieldFrom (x : string seq) = x |> Seq.map Content |> this.YieldFrom
+        member this.YieldFrom (xs : string seq) = xs |> Seq.map Content |> this.YieldFrom
+
+        member this.Yield (x : IScratchNodeSource) = x.GetScratchNodes() |> this.YieldFrom
+
+        member this.YieldFrom (xs : IScratchNodeSource seq) = xs |> Seq.collect (fun x -> x.GetScratchNodes()) |> this.YieldFrom
 
         member _.Combine((x : ScratchNodeBuilderNode list), y) = x @ y
+
+        member this.Yield (x : IScratchHtmlSource) = Raw (x.GetHtmlString()) |> this.Yield
+
+        member this.YieldFrom (xs : IScratchHtmlSource seq) = xs |> Seq.map (fun x -> x.GetHtmlString() |> Raw) |> this.YieldFrom
 
         member _.Delay f = f()
 
