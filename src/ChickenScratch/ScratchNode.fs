@@ -8,8 +8,6 @@ type IScratchHtmlSource =
 
 
 type IScratchNodeSource =
-    inherit IScratchHtmlSource
-
     abstract member GetScratchNodes : unit -> ScratchNode list
                
 
@@ -30,9 +28,12 @@ and
         
         member this.AsHtmlString = this.Render 0
         
-        interface IScratchNodeSource with
-            member this.GetHtmlString() = this.AsHtmlString
-            member this.GetScratchNodes() = [ this ]
+        //interface IScratchNodeSource with
+        //    member this.GetScratchNodes() = [ this ]
+
+        //interface IScratchHtmlSource with
+        //    member this.GetHtmlString() = this.AsHtmlString
+            
             
 
 and 
@@ -71,7 +72,9 @@ and
 
         member this.AsHtmlString = this.Render 0
 
-        interface IScratchNodeSource with
-            member this.GetHtmlString() = this.AsHtmlString
-            member this.GetScratchNodes() = [ Element this ]
-
+        //interface IScratchNodeSource with
+        //    member this.GetScratchNodes() = [ Element this ]
+        
+        //interface IScratchHtmlSource with
+        //    member this.GetHtmlString() = this.AsHtmlString
+            
