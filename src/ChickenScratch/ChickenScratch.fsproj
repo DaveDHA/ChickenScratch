@@ -10,6 +10,7 @@
     <RepositoryUrl>https://github.com/DaveDHA/ChickenScratch</RepositoryUrl>
     <PackageTags>F#;FSharp;fsx;script;html</PackageTags>
     <PackageLicenseFile>License.txt</PackageLicenseFile>
+    <PackageReadmeFile>Readme.md</PackageReadmeFile>
   </PropertyGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\ChickenScratch.png" />
@@ -19,6 +20,10 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\License.txt">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+    <None Include="..\..\Readme.md">
       <Pack>True</Pack>
       <PackagePath>\</PackagePath>
     </None>
