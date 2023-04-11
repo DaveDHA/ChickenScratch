@@ -4,12 +4,10 @@
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Resources\TreeTable.css" />
-    <EmbeddedResource Include="Resources\TreeTable.js" />
+    <EmbeddedResource Include="Resources\ChickenScratch.png" />
     <Compile Include="ScratchNode.fs" />
     <Compile Include="ScratchNodeBuilder.fs" />
     <Compile Include="OtherContent.fs" />
-    <Compile Include="CodeGeneration.fs" />
-    <Compile Include="Facade.fs" />
   </ItemGroup>
+  <ItemGroup />
 </Project>

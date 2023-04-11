@@ -1,10 +1,6 @@
 ﻿namespace ChickenScratch
 
-open System
 open System.Net
-
-type IScratchHtmlSource =
-    abstract member GetHtmlString : unit -> string
 
 
 type IScratchNodeSource =
@@ -15,27 +11,17 @@ and
     [<StructuredFormatDisplay("{AsHtmlString}")>] 
     ScratchNode =
     | Element of ScratchElement
-    | Content of string
-    | HtmlSource of IScratchHtmlSource
-    | Raw of string
+    | EncodedContent of string
+    | RawContent of string
     with
-        member this.Render indent = 
+        member internal this.Render indent = 
             match this with
             | Element el -> el.Render indent
-            | Content str -> WebUtility.HtmlEncode str
-            | HtmlSource src -> src.GetHtmlString()
-            | Raw str -> str
+            | EncodedContent str -> WebUtility.HtmlEncode str
+            | RawContent str -> str
         
         member this.AsHtmlString = this.Render 0
         
-        //interface IScratchNodeSource with
-        //    member this.GetScratchNodes() = [ this ]
-
-        //interface IScratchHtmlSource with
-        //    member this.GetHtmlString() = this.AsHtmlString
-            
-            
-
 and 
     [<StructuredFormatDisplay("{AsHtmlString}")>] 
     ScratchElement = {
@@ -45,15 +31,15 @@ and
         AllowChildren : bool
     }
         with
-        member this.Render indent = 
+        member internal this.Render indent = 
             let indentLine level = sprintf "%s%s" (String.replicate (level * 4) " ")
 
             let openTag = 
                 seq {
-                    yield $"<{this.Tag}"
+                    $"<{this.Tag}"
                     for kvp in this.Attributes do
-                        yield $" {kvp.Key}=\"{kvp.Value}\""
-                    if not this.AllowChildren then yield "/>" else yield ">"
+                        $" {kvp.Key}=\"{kvp.Value}\""
+                    if not this.AllowChildren then "/>" else ">"
                 } 
                 |> String.concat ""
 
@@ -71,10 +57,4 @@ and
             |> String.concat (if singleLine then "" else "\n")
 
         member this.AsHtmlString = this.Render 0
-
-        //interface IScratchNodeSource with
-        //    member this.GetScratchNodes() = [ Element this ]
-        
-        //interface IScratchHtmlSource with
-        //    member this.GetHtmlString() = this.AsHtmlString
             

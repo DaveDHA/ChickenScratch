@@ -2,46 +2,60 @@
 
 open System.IO
 open System.Reflection
-open ScratchTagExpressions
+open HtmlExpressions
 
 module ScratchStyle =
-    let FromCssString css = Tags.style { raw css }
+    let FromString css = Tags.style { RawContent css }
 
 
     let FromStream (stream : Stream) =
-        use reader = new StreamReader(stream)
-        reader.ReadToEnd() |> FromCssString
+        using (new StreamReader(stream)) (fun r -> r.ReadToEnd() |> FromString)
+        
 
-
-    let FromCssFile path = File.OpenRead(path) |> FromStream
-
+    let FromFile path = 
+        using (File.OpenRead path) FromStream
+        
 
     let FromResource (assembly : Assembly) resourcePath =
-        resourcePath
-        |> assembly.GetManifestResourceStream
-        |> FromStream
-    
-    
+        using (assembly.GetManifestResourceStream resourcePath) FromStream
+        
+        
     let FromScratchResource = FromResource (Assembly.GetExecutingAssembly())
 
 
 
 module ScratchScript =
-    let FromJsString js = script { raw js }
+    let FromString js = Tags.script { RawContent js }
 
 
     let FromStream (stream : Stream) =
-        use reader = new StreamReader(stream)
-        reader.ReadToEnd() |> FromJsString
+        using (new StreamReader(stream)) (fun r -> r.ReadToEnd() |> FromString)
+        
 
-
-    let FromCssFile path = File.OpenRead(path) |> FromStream
+    let FromFile path = using (File.OpenRead path) FromStream
 
 
     let FromResource (assembly : Assembly) resourcePath =
-        resourcePath
-        |> assembly.GetManifestResourceStream
-        |> FromStream
-    
-    
+        using (assembly.GetManifestResourceStream resourcePath) FromStream
+        
+        
+    let FromScratchResource = FromResource (Assembly.GetExecutingAssembly())
+
+
+
+module ScratchHtml =
+    let FromString js = RawContent js
+
+
+    let FromStream (stream : Stream) =
+        using (new StreamReader(stream)) (fun r -> r.ReadToEnd() |> FromString)
+        
+
+    let FromFile path = using (File.OpenRead path) FromStream
+
+
+    let FromResource (assembly : Assembly) resourcePath =
+        using (assembly.GetManifestResourceStream resourcePath) FromStream
+        
+        
     let FromScratchResource = FromResource (Assembly.GetExecutingAssembly())

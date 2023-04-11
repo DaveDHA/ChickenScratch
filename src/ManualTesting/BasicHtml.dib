@@ -14,7 +14,7 @@ open ChickenScratch
 #!fsharp
 
 module Test =
-    open ChickenScratch.ScratchTagExpressions
+    open ChickenScratch.HtmlExpressions
     let getResourceList() = 
         ul {
             _style "color: blue"
@@ -63,7 +63,7 @@ sprintf "%A" Test.doc
 
 module Test2 = 
     open ChickenScratch
-    open ChickenScratch.ScratchTagExpressions
+    open ChickenScratch.HtmlExpressions
     
     type Employee = {
         Id : int
@@ -80,11 +80,10 @@ module Test2 =
                         $"{this.Id}: "                    
                         strong { $"{this.Name}: " }
                         $"({this.Email})"
-                        if not (List.isEmpty this.ManagerOf) then yield! this.ManagerOf //|> Seq.cast<IScratchNodeSource>
+                        if not (List.isEmpty this.ManagerOf) then yield! this.ManagerOf 
                     }   
                 }
-            ]
-            //member this.GetHtmlString() = failwith "Not implemented"
+            ]            
 
     let molly = { Id = 1 ; Name = "Molly Manager" ; Email = "theboss@Test.com" ; ManagerOf = [
         { Id = 10 ; Name = "Testy McTesterson" ; Email = "Testy@Test.com" ; ManagerOf = List.empty }
@@ -107,15 +106,14 @@ Test2.doc.ToString().DisplayAs("text/html")
 #!fsharp
 
 module Test3 = 
-    open ChickenScratch
-    open ChickenScratch.ScratchTagExpressions
+    open ChickenScratch.HtmlExpressions
 
     type SampleControl = {
         Color : string
     }
         with            
             interface IScratchNodeSource with
-                member this.GetScratchNodes() = [ Raw $"<span style='color: {this.Color}'>SampleControl</span>" ]
+                member this.GetScratchNodes() = [ ScratchHtml.FromString $"<span style='color: {this.Color}'>SampleControl</span>" ]
 
     let doc = div {
         h1 { "This is a test of adding an Html Source" }
@@ -134,8 +132,7 @@ Test3.doc.ToString().DisplayAs("text/html")
 #!fsharp
 
 module Test4 =
-    open ChickenScratch
-    open ChickenScratch.ScratchTagExpressions
+    open ChickenScratch.HtmlExpressions
 
     type EmployeeInfo = {
         Id : int
@@ -144,7 +141,11 @@ module Test4 =
     }
     with
         interface IScratchNodeSource with
-            member this.GetScratchNodes() = [ Content $"{this.Id}: " ; strong { $"{this.Name}: " } ; Content $"({this.Email})" ]
+            member this.GetScratchNodes() = [ 
+                EncodedContent $"{this.Id}: "
+                strong { $"{this.Name}: " }
+                EncodedContent $"({this.Email})" 
+            ]
 
 
     type OrgChartEntry = 
