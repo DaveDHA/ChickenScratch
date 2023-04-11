@@ -9,7 +9,11 @@ dotnet build ../ChickenScratch.sln
 #!fsharp
 
 #r "../ChickenScratch/bin/Debug/net7.0/ChickenScratch.dll"
+#r "../ChickenScratch.Interactive/bin/Debug/net7.0/ChickenScratch.Interactive.dll"
+
 open ChickenScratch
+
+ChickenScratch.Interactive.Extension.Load()
 
 #!fsharp
 
@@ -49,7 +53,7 @@ module Test =
 
 #!fsharp
 
-Test.doc.ToString().DisplayAs("text/html")
+Test.doc
 
 #!fsharp
 
@@ -97,7 +101,7 @@ module Test2 =
             molly            
         }            
 
-Test2.doc.ToString().DisplayAs("text/html")
+Test2.doc
 
 #!markdown
 
@@ -123,7 +127,7 @@ module Test3 =
         h2 { "Did it work?" }
     }
 
-Test3.doc.ToString().DisplayAs("text/html")
+Test3.doc
 
 #!markdown
 
@@ -191,4 +195,4 @@ module Test4 =
     }
 
 
-Test4.doc.ToString().DisplayAs("text/html")
+Test4.doc
