@@ -1,0 +1,52 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <Title>ChickenScratch.Interactive</Title>
+    <Authors>DaveDHA</Authors>
+    <Description>Polyglot Notebooks (DotNet Interactive) extension to ChickenScratch</Description>
+    <Copyright> © 2023 David Andrews</Copyright>
+    <PackageProjectUrl>https://github.com/DaveDHA/ChickenScratch</PackageProjectUrl>
+    <PackageIcon>ChickenScratch.png</PackageIcon>
+    <RepositoryUrl>https://github.com/DaveDHA/ChickenScratch</RepositoryUrl>
+    <PackageTags>F#;FSharp;html;notebook;polyglot;dotnet;interactive;extension</PackageTags>
+    <PackageLicenseFile>License.txt</PackageLicenseFile>
+    <PackageReadmeFile>Readme.md</PackageReadmeFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Folder Include="NugetContent\" />
+    <Content Include="nugetcontent\extension.dib" />
+    <None Include="..\..\License.txt" Link="NugetContent\License.txt">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+    <None Include="..\..\Readme.md" Link="NugetContent\Readme.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+    <None Include="..\ChickenScratch\Resources\ChickenScratch.png" Link="NugetContent\ChickenScratch.png">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+	<None Include=".\NugetContent\extension.dib">
+		<Pack>True</Pack>
+		<PackagePath>\interactive-extensions\dotnet</PackagePath>
+	</None>
+    <Compile Include="Extension.fs" />	  
+  </ItemGroup>
+
+  <ItemGroup />
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.DotNet.Interactive.Formatting" Version="1.0.0-beta.23205.1" />
+	  <PackageReference Include="Microsoft.DotNet.Interactive" Version="1.0.0-beta.23205.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ChickenScratch\ChickenScratch.fsproj" />
+  </ItemGroup>
+
+  <ItemGroup />
+
+</Project>

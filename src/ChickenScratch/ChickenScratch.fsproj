@@ -1,9 +1,37 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net7.0</TargetFramework>
-    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <TargetFramework>netstandard2.1</TargetFramework>
+    <Title>ChickenScratch</Title>
+    <Authors>DaveDHA</Authors>
+    <Description>Utilities to help produce rough Html reports from fsx scripts.</Description>
+    <Copyright> © 2023 David Andrews</Copyright>
+    <PackageProjectUrl>https://github.com/DaveDHA/ChickenScratch</PackageProjectUrl>
+    <PackageIcon>ChickenScratch.png</PackageIcon>
+    <RepositoryUrl>https://github.com/DaveDHA/ChickenScratch</RepositoryUrl>
+    <PackageTags>F#;FSharp;fsx;script;html</PackageTags>
+    <PackageLicenseFile>License.txt</PackageLicenseFile>
+    <PackageReadmeFile>Readme.md</PackageReadmeFile>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Facade.fs" />
+    <Folder Include="NugetContent\" />
+    <None Include="..\..\License.txt" Link="NugetContent\License.txt">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+    <None Include="..\..\Readme.md" Link="NugetContent\Readme.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+    <EmbeddedResource Include="Resources\ChickenScratch.png" />
+    <Compile Include="ScratchNode.fs" />
+    <Compile Include="ScratchNodeBuilder.fs" />
+    <Compile Include="OtherContent.fs" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\ChickenScratch.png">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+  </ItemGroup>
+  <ItemGroup />
 </Project>

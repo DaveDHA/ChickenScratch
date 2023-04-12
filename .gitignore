@@ -1,2 +1,6 @@
 **/obj
 **/bin
+
+.fake
+.vs
+publish

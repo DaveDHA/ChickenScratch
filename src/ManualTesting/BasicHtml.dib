@@ -1,0 +1,198 @@
+#!meta
+
+{"kernelInfo":{"defaultKernelName":"csharp","items":[{"aliases":[],"name":"csharp"},{"aliases":[],"languageName":"fsharp","name":"fsharp"}]}}
+
+#!pwsh
+
+dotnet build ../ChickenScratch.sln
+
+#!fsharp
+
+#r "../ChickenScratch/bin/Debug/net7.0/ChickenScratch.dll"
+#r "../ChickenScratch.Interactive/bin/Debug/net7.0/ChickenScratch.Interactive.dll"
+
+open ChickenScratch
+
+ChickenScratch.Interactive.Extension.Load()
+
+#!fsharp
+
+module Test =
+    open ChickenScratch.HtmlExpressions
+    let getResourceList() = 
+        ul {
+            _style "color: blue"
+            yield!                
+                System.Reflection.Assembly.GetAssembly(typeof<ScratchNode>).GetManifestResourceNames()
+                |> Seq.map (fun resource -> li { resource })
+        }
+
+    let doc =
+        div {            
+            style { """
+                .mainHeader { color: red }
+
+                .mainDiv {
+                    border: solid 5px green;
+                    background: white;
+                    color: black;
+                    padding: 0px 10px;
+                }"""                    
+            }
+            
+            div {
+                _class "mainDiv"                
+                h1 { "This is a test document for Chicken Scratch" ; _class "mainHeader" }
+                h2 { "Embedded Resources" ; _style "text-decoration: underline" }
+                
+                getResourceList()                
+            }
+
+            hr { () }
+        }
+
+#!fsharp
+
+Test.doc
+
+#!fsharp
+
+sprintf "%A" Test.doc
+
+#!markdown
+
+# Include an IScrachNodeSource
+
+#!fsharp
+
+module Test2 = 
+    open ChickenScratch
+    open ChickenScratch.HtmlExpressions
+    
+    type Employee = {
+        Id : int
+        Name : string
+        Email : string
+        ManagerOf : Employee list
+    }
+    with
+        interface ChickenScratch.IScratchNodeSource with
+            member this.GetScratchNodes() = [ 
+                ul {
+                    li {
+                        if (List.isEmpty this.ManagerOf) then _style "color: yellow" else _style "color: red"
+                        $"{this.Id}: "                    
+                        strong { $"{this.Name}: " }
+                        $"({this.Email})"
+                        if not (List.isEmpty this.ManagerOf) then yield! this.ManagerOf 
+                    }   
+                }
+            ]            
+
+    let molly = { Id = 1 ; Name = "Molly Manager" ; Email = "theboss@Test.com" ; ManagerOf = [
+        { Id = 10 ; Name = "Testy McTesterson" ; Email = "Testy@Test.com" ; ManagerOf = List.empty }
+        { Id = 11 ; Name = "Sam Sampleman" ; Email = "Sam@Test.com" ; ManagerOf = List.empty }
+        { Id = 12 ; Name = "Eleanor Example" ; Email = "Ellie@Test.com" ; ManagerOf = List.empty }
+    ]}
+    
+    let doc = 
+        div {
+            h1 { "Org Chart" }
+            molly            
+        }            
+
+Test2.doc
+
+#!markdown
+
+# Include an IScratchNodeSource with Raw Html
+
+#!fsharp
+
+module Test3 = 
+    open ChickenScratch.HtmlExpressions
+
+    type SampleControl = {
+        Color : string
+    }
+        with            
+            interface IScratchNodeSource with
+                member this.GetScratchNodes() = [ ScratchHtml.FromString $"<span style='color: {this.Color}'>SampleControl</span>" ]
+
+    let doc = div {
+        h1 { "This is a test of adding an Html Source" }
+        { Color = "red" }
+        { Color = "green" }
+        { Color = "blue" }
+        h2 { "Did it work?" }
+    }
+
+Test3.doc
+
+#!markdown
+
+# Employees Again
+
+#!fsharp
+
+module Test4 =
+    open ChickenScratch.HtmlExpressions
+
+    type EmployeeInfo = {
+        Id : int
+        Name : string
+        Email : string
+    }
+    with
+        interface IScratchNodeSource with
+            member this.GetScratchNodes() = [ 
+                EncodedContent $"{this.Id}: "
+                strong { $"{this.Name}: " }
+                EncodedContent $"({this.Email})" 
+            ]
+
+
+    type OrgChartEntry = 
+    | Manager of EmployeeInfo * (OrgChartEntry list)
+    | WorkerBee of EmployeeInfo
+    with 
+        interface IScratchNodeSource with
+            member this.GetScratchNodes() = 
+                match this with
+                | WorkerBee emp -> [ li { emp ; _class "workerBee" } ]
+                | Manager (mgr, emps) -> [ li { mgr ; ul { yield! emps } ; _class "manager" } ]
+
+
+    type Company = {
+        Name : string
+        OrgChart : OrgChartEntry list
+    }
+    with 
+        interface IScratchNodeSource with
+            member this.GetScratchNodes() = [ h1 { this.Name } ; ul { yield! this.OrgChart }]
+
+
+    let company = {
+        Name = "Samples Incorporated"
+        OrgChart = [
+            Manager ({ Id = 1 ; Name = "Molly Manager" ; Email = "theboss@Sample.com" }, [
+                WorkerBee { Id = 10 ; Name = "Sammy Sampleson" ; Email = "sam@sample.com" }
+                WorkerBee { Id = 11 ; Name = "Elise Example" ; Email = "elise@sample.com" }
+                WorkerBee { Id = 12 ; Name = "Testy McTesterson" ; Email = "Testy@Test.com" }
+            ])
+        ]
+    }    
+        
+    let doc = div { 
+        style {
+            _type "text/css"
+            """
+                .manager { color: red }
+                .workerBee { color: yellow }
+            """
+        }
+        company 
+    }
+
+
+Test4.doc
