@@ -16,6 +16,7 @@
 
   <ItemGroup>
     <Folder Include="NugetContent\" />
+    <Content Include="nugetcontent\extension.dib" />
     <None Include="..\..\License.txt" Link="NugetContent\License.txt">
       <Pack>True</Pack>
       <PackagePath>\</PackagePath>
@@ -28,7 +29,11 @@
       <Pack>True</Pack>
       <PackagePath>\</PackagePath>
     </None>
-    <Compile Include="Extension.fs" />
+	<None Include=".\NugetContent\extension.dib">
+		<Pack>True</Pack>
+		<PackagePath>\interactive-extensions\dotnet</PackagePath>
+	</None>
+    <Compile Include="Extension.fs" />	  
   </ItemGroup>
 
   <ItemGroup />

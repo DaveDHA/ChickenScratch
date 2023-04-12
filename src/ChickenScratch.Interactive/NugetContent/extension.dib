@@ -1,0 +1,3 @@
+#!fsharp
+
+ChickenScratch.Interactive.Extension.Load()
