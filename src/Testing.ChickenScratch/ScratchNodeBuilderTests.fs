@@ -1,6 +1,5 @@
 ﻿namespace Testing.ChickenScratch.ScratchNodeBuilder
 
-open System
 open Xunit
 open FsUnit.Xunit
 open ChickenScratch
