@@ -7,6 +7,10 @@ Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "ChickenScratch", "ChickenSc
 EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "ChickenScratch.Interactive", "ChickenScratch.Interactive\ChickenScratch.Interactive.fsproj", "{00472A09-6634-4F59-9EBB-53F7181C4543}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Testing", "Testing", "{D6034048-BEAE-4A37-9F88-3EE12335625E}"
+EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Testing.ChickenScratch", "Testing.ChickenScratch\Testing.ChickenScratch.fsproj", "{516EAAFB-16BA-4563-97E8-5C8901FEB8BC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,9 +25,16 @@ Global
 		{00472A09-6634-4F59-9EBB-53F7181C4543}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{00472A09-6634-4F59-9EBB-53F7181C4543}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{00472A09-6634-4F59-9EBB-53F7181C4543}.Release|Any CPU.Build.0 = Release|Any CPU
+		{516EAAFB-16BA-4563-97E8-5C8901FEB8BC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{516EAAFB-16BA-4563-97E8-5C8901FEB8BC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{516EAAFB-16BA-4563-97E8-5C8901FEB8BC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{516EAAFB-16BA-4563-97E8-5C8901FEB8BC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{516EAAFB-16BA-4563-97E8-5C8901FEB8BC} = {D6034048-BEAE-4A37-9F88-3EE12335625E}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {C94299B3-4F4B-479E-A86C-BE7E2A5B7D7B}
