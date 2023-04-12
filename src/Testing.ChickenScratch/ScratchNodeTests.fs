@@ -1,4 +1,4 @@
-module Testing.ChickenScratch.ScratchNode
+namespace Testing.ChickenScratch.ScratchNode
 
 open System
 open Xunit
