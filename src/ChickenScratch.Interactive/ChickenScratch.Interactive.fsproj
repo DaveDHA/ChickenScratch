@@ -3,6 +3,7 @@
   <PropertyGroup>
     <TargetFramework>net7.0</TargetFramework>
     <Title>ChickenScratch.Interactive</Title>
+	<VersionPrefix>1.1.0</VersionPrefix>
     <Authors>DaveDHA</Authors>
     <Description>Polyglot Notebooks (DotNet Interactive) extension to ChickenScratch</Description>
     <Copyright> © 2023 David Andrews</Copyright>
@@ -15,13 +16,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="NugetContent\" />
     <Content Include="nugetcontent\extension.dib" />
     <None Include="..\..\License.txt" Link="NugetContent\License.txt">
       <Pack>True</Pack>
       <PackagePath>\</PackagePath>
     </None>
-    <None Include="..\..\Readme.md" Link="NugetContent\Readme.md">
+    <None Include="NugetContent\Readme.md" Link="NugetContent\Readme.md">
       <Pack>True</Pack>
       <PackagePath>\</PackagePath>
     </None>

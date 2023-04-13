@@ -2,6 +2,7 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.1</TargetFramework>
     <Title>ChickenScratch</Title>
+	<VersionPrefix>1.1.0</VersionPrefix>
     <Authors>DaveDHA</Authors>
     <Description>Utilities to help produce rough Html reports from fsx scripts.</Description>
     <Copyright> © 2023 David Andrews</Copyright>
@@ -13,18 +14,18 @@
     <PackageReadmeFile>Readme.md</PackageReadmeFile>
   </PropertyGroup>
   <ItemGroup>
-    <Folder Include="NugetContent\" />
     <None Include="..\..\License.txt" Link="NugetContent\License.txt">
       <Pack>True</Pack>
       <PackagePath>\</PackagePath>
     </None>
-    <None Include="..\..\Readme.md" Link="NugetContent\Readme.md">
+    <None Include="NugetContent\Readme.md" Link="NugetContent\Readme.md">
       <Pack>True</Pack>
       <PackagePath>\</PackagePath>
     </None>
     <EmbeddedResource Include="Resources\ChickenScratch.png" />
     <Compile Include="ScratchNode.fs" />
     <Compile Include="ScratchNodeBuilder.fs" />
+    <Compile Include="ScratchImage.fs" />
     <Compile Include="OtherContent.fs" />
   </ItemGroup>
   <ItemGroup>
@@ -33,5 +34,4 @@
       <PackagePath>\</PackagePath>
     </None>
   </ItemGroup>
-  <ItemGroup />
 </Project>

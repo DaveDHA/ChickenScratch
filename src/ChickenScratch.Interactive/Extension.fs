@@ -13,15 +13,26 @@ let private registerScratchElementFormatter() =
 
 
 let private registerScratchNodeSourceFormatter() = 
-        let formatScratchNodeSource (source : IScratchNodeSource) = 
-            source.GetScratchNodes() 
-            |> List.map(fun node -> node.AsHtmlString) 
-            |> String.concat "\n"
+    let formatScratchNodeSource (source : IScratchNodeSource) = 
+        source.GetScratchNodes() 
+        |> List.map(fun node -> node.AsHtmlString) 
+        |> String.concat "\n"
 
-        Formatter.Register<IScratchNodeSource>(formatScratchNodeSource, mimeType = "text/html")
+    Formatter.Register<IScratchNodeSource>(formatScratchNodeSource, mimeType = "text/html")
+
+
+let private registerScratchNodeSourceSeqFormatter() =
+    let fmt (source : IScratchNodeSource seq) = 
+        source 
+        |> Seq.collect(fun nodeSource -> nodeSource.GetScratchNodes()) 
+        |> Seq.map(fun node -> node.AsHtmlString) 
+        |> String.concat "\n"
+
+    Formatter.Register<IScratchNodeSource seq>(fmt, mimeType = "text/html")
 
 
 let Load() = 
     registerScratchNodeFormatter()
     registerScratchElementFormatter()
     registerScratchNodeSourceFormatter()    
+    registerScratchNodeSourceSeqFormatter()

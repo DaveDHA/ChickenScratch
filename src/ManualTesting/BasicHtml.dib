@@ -2,18 +2,11 @@
 
 {"kernelInfo":{"defaultKernelName":"csharp","items":[{"aliases":[],"name":"csharp"},{"aliases":[],"languageName":"fsharp","name":"fsharp"}]}}
 
-#!pwsh
-
-dotnet build ../ChickenScratch.sln
-
 #!fsharp
 
-#r "../ChickenScratch/bin/Debug/net7.0/ChickenScratch.dll"
-#r "../ChickenScratch.Interactive/bin/Debug/net7.0/ChickenScratch.Interactive.dll"
+#!import "PackAndLoad.dib"
 
 open ChickenScratch
-
-ChickenScratch.Interactive.Extension.Load()
 
 #!fsharp
 
@@ -196,3 +189,7 @@ module Test4 =
 
 
 Test4.doc
+
+#!fsharp
+
+[ Test4.company ; Test4.company ]
