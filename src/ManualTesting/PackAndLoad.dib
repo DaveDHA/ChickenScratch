@@ -24,14 +24,3 @@ dotnet pack ..\ChickenScratch.sln -c Debug --version-suffix $versionSuffix
 #i "nuget: C:/Dev/ChickenScratch/src/ChickenScratch/bin/Debug"
 #i "nuget: C:/Dev/ChickenScratch/src/ChickenScratch.Interactive/bin/Debug"
 #r "nuget: ChickenScratch.Interactive, *-*"
-
-#!fsharp
-
-open ChickenScratch
-
-module Test1 =
-    open ChickenScratch.HtmlExpressions
-
-    let doc = h1 { "Hello World" }
-
-Test1.doc
