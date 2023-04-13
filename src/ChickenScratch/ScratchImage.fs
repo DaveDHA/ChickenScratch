@@ -6,6 +6,7 @@ open System.Reflection
 open ChickenScratch.HtmlExpressions
 
 
+[<StructuredFormatDisplay("{AsHtmlString")>]
 type ScratchImage = {
     DataUrl : string
     UniqueClass : string
@@ -36,6 +37,8 @@ type ScratchImage = {
             }            
 
 
+        member this.AsHtmlString = (this.Merge true).AsHtmlString
+
         member this.Instance = Element (this.Merge false)
 
         member this.Style = 
@@ -47,8 +50,6 @@ type ScratchImage = {
             | Element e -> { this with Prototype = Some e }
             | _ -> failwith "ScratchImage.WithPrototype: prototype must be an Element ScratchNode"
         
-
-        member this.WithUniqueClass uniqueClass = { this with UniqueClass = uniqueClass }
 
         interface IScratchNodeSource with member this.GetScratchNodes() = [ Element (this.Merge true) ]
             
@@ -72,21 +73,21 @@ module ScratchImage =
         sprintf "data:%s;base64,%s" mime (Convert.ToBase64String bytes)
 
     
-    let FromBytes bytes fileExtension =
+    let FromBytes fileExtension bytes =
         { create() with DataUrl = formatDataUrl bytes fileExtension }
 
 
-    let FromFile (path : string) = FromBytes (File.ReadAllBytes path) (Path.GetExtension path)
+    let FromFile (path : string) = FromBytes (Path.GetExtension path) (File.ReadAllBytes path) 
 
 
-    let FromStream (stream : Stream) fileExtension =
+    let FromStream fileExtension (stream : Stream) =
         use memStream = new MemoryStream()
         stream.CopyTo(memStream)
-        FromBytes (memStream.ToArray()) fileExtension
+        FromBytes fileExtension (memStream.ToArray())
         
 
     let FromResource (assembly : Assembly) (resourcePath : string) =
-        FromStream (assembly.GetManifestResourceStream resourcePath) (Path.GetExtension resourcePath)
+        FromStream (Path.GetExtension resourcePath) (assembly.GetManifestResourceStream resourcePath)
         
 
     let AsStyle (img : ScratchImage) = img.Style        
@@ -96,7 +97,5 @@ module ScratchImage =
 
 
     let WithPrototype prototype (img : ScratchImage) = img.WithPrototype prototype
-        
 
-    let WithUniqueClass uniqueClass (img : ScratchImage) = img.WithUniqueClass uniqueClass
 

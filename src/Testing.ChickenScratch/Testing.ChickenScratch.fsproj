@@ -9,11 +9,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="resources\ScratchImageTest.jpg" />
     <EmbeddedResource Include="resources\TestDoc.html" />
     <EmbeddedResource Include="resources\TestScript.js" />
     <EmbeddedResource Include="resources\TestStyle.css" />
     <Compile Include="ScratchNodeTests.fs" />
     <Compile Include="ScratchNodeBuilderTests.fs" />
+    <Compile Include="ScratchImageTests.fs" />
     <Compile Include="OtherContentTests.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
