@@ -189,3 +189,7 @@ module Test4 =
 
 
 Test4.doc
+
+#!fsharp
+
+[ Test4.company ; Test4.company ]

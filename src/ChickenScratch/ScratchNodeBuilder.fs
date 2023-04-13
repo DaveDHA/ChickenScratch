@@ -292,7 +292,7 @@ module Attributes =
 
 [<AutoOpen>]
 module Events =
-    let _onabort = attr "onabort"
+    let onabort = attr "onabort"
     let onblur = attr "onblur"
     let oncanplay = attr "oncanplay"
     let oncanplaythrough = attr "oncanplaythrough"

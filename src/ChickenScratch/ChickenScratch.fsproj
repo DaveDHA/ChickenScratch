@@ -14,12 +14,11 @@
     <PackageReadmeFile>Readme.md</PackageReadmeFile>
   </PropertyGroup>
   <ItemGroup>
-    <Folder Include="NugetContent\" />
     <None Include="..\..\License.txt" Link="NugetContent\License.txt">
       <Pack>True</Pack>
       <PackagePath>\</PackagePath>
     </None>
-    <None Include="..\..\Readme.md" Link="NugetContent\Readme.md">
+    <None Include="NugetContent\Readme.md" Link="NugetContent\Readme.md">
       <Pack>True</Pack>
       <PackagePath>\</PackagePath>
     </None>
