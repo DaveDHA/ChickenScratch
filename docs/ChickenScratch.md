@@ -23,7 +23,8 @@ module Sample1 =
         ul {
             li { "Simple DSL for creating HTML" }
             li { "Include" ; strong { "IScratchNodeSource" } ; "types directly in your Html exressions" } 
-            li { "Add content from files, strings, streams, or resources" }           
+            li { "Add content from files, strings, streams, or resources" }    
+            li { "Add Base64 encoded images" }       
         }        
     }
 
@@ -33,15 +34,16 @@ printfn "%A" Sample1.doc
 Outputs:
 
 ```
-<div style="border: solid 3px green ; background-color: lightgray ; color: black; padding: 10px;">
+<div style="border: solid 3px green ; background-color: lightgray ; color: black; padding: 10px">
     <h1>Welcome to Chicken Scratch</h1>
     <ul>
         <li>Simple DSL for creating HTML</li>
         <li>
             Include
             <strong>IScratchNodeSource</strong>
-            types directly in your HTML
+            types directly in your Html exressions
         </li>
+        <li>Add content from files, strings, streams, or resources</li>
     </ul>
 </div>
 ```
@@ -238,3 +240,69 @@ module Sample4 =
 printfn "%A" Sample4.doc
 ```
 
+### Adding Base64 Encoded Images
+
+`ScratchImage` offers methods for loading images from files, byte arrays, streams, or embedded resources.  Images added in this way have the image bytes encoded into the html, so if the HTML is saved to a file, it can be shared without sending any additional image files.
+
+```FSharp
+module Sample5 =
+    open ChickenScratch.HtmlExpressions
+
+    let doc = div {
+        ScratchImage.FromFile "ChickenScratch.png"
+    }
+
+printfn "%A" Sample5.doc
+```
+
+Outputs:
+```
+<div>
+    <img class="scratch-image-0daafd93-b3e5-4a73-b907-db83bea72161" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAA....[snip]"/>
+</div>
+```
+
+Images of type .jpg, .png, and .gif are supported.
+
+A `Prototype` element can be provided to a `ScratchImage`, and all attributes of that prototype will be added to the image.  If the prototype includes a `_class` attribute, that class will be added to the image rather than replacing the unique class that is generated for it.
+
+If the image is going to be used multiple times, it can be split into a style and instances, so that the encoded bytes aren't repeated.
+
+```FSharp
+module Sample6 =
+    open ChickenScratch.HtmlExpressions
+
+    let myImage = 
+        "ChickenScratch.Resources.ChickenScratch.png"
+        |> ScratchImage.FromResource typeof<ScratchImage>.Assembly 
+        |> ScratchImage.WithPrototype (img { _style "border: solid 3px green" })
+
+    let doc = div {
+        myImage.Style
+
+        ul {
+            li { myImage.Instance }
+            li { myImage.WithPrototype( img { _width "64px" } ).Instance }
+            li { myImage.WithPrototype( img { _width "32px" } ).Instance }
+        }
+    }
+
+printfn "%A" Sample6.doc
+```
+
+Outputs:
+
+```
+<div>
+    <style>
+        .scratch-image-dee3e2bf-7d0e-49f0-a1c2-5f2543452b06 { content: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIAA....[snip]") }
+    </style>
+    <ul>
+        <li>
+            <img class="scratch-image-dee3e2bf-7d0e-49f0-a1c2-5f2543452b06" style="border: solid 3px green"/>
+        </li>
+        <li><img class="scratch-image-dee3e2bf-7d0e-49f0-a1c2-5f2543452b06" width="64px"/></li>
+        <li><img class="scratch-image-dee3e2bf-7d0e-49f0-a1c2-5f2543452b06" width="32px"/></li>
+    </ul>
+</div>
+```
