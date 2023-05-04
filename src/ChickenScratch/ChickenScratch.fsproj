@@ -23,6 +23,7 @@
       <PackagePath>\</PackagePath>
     </None>
     <EmbeddedResource Include="Resources\ChickenScratch.png" />
+    <Compile Include="Utility.fs" />
     <Compile Include="ScratchNode.fs" />
     <Compile Include="ScratchNodeBuilder.fs" />
     <Compile Include="ScratchImage.fs" />

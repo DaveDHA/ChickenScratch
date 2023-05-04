@@ -13,14 +13,13 @@
     <EmbeddedResource Include="resources\TestDoc.html" />
     <EmbeddedResource Include="resources\TestScript.js" />
     <EmbeddedResource Include="resources\TestStyle.css" />
+    <Compile Include="UtilityTests.fs" />
     <Compile Include="ScratchNodeTests.fs" />
     <Compile Include="ScratchNodeBuilderTests.fs" />
     <Compile Include="ScratchImageTests.fs" />
     <Compile Include="OtherContentTests.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
-
-  <ItemGroup />
 
   <ItemGroup>
     <PackageReference Include="FsUnit.xUnit" Version="5.2.0" />
