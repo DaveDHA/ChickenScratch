@@ -14,6 +14,7 @@
     <EmbeddedResource Include="resources\TestScript.js" />
     <EmbeddedResource Include="resources\TestStyle.css" />
     <Compile Include="UtilityTests.fs" />
+    <Compile Include="TabDataTests.fs" />
     <Compile Include="ScratchNodeTests.fs" />
     <Compile Include="ScratchNodeBuilderTests.fs" />
     <Compile Include="ScratchImageTests.fs" />

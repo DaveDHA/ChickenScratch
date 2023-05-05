@@ -11,13 +11,6 @@ type NamingConvention =
 
 
 module String = 
-    let private removeNonAlphaNumeric (str : string) = 
-        str
-        |> Seq.filter Char.IsLetterOrDigit
-        |> Seq.toArray
-        |> String
-
-        
     type private processState = 
     | LookingForFirstWord
     | ProcessingLower
