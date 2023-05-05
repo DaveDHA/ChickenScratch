@@ -10,8 +10,8 @@ Guidance for F# Scripts can be found in the [ChickenScratch documentation](./doc
 
 Guidance for Polyglot Notebooks can be found in the ChickenScratch.Interactive documentation:
 
-- [Html expressions in Polyglot Notebooks](./docs/Html Expressions.ipynb)
-- [Working with TabularDataResource](./docs/Working with TabularDataResource.ipynb)
+- [Html expressions](./docs/HtmlExpressions.ipynb)
+- [Working with TabularDataResource](./docs/TabularDataResource.ipynb)
 
 This is very much a work in progress, and please remember that the focus is on quick and easy output from support scripts, not 
 on being the most robust HTML library available.
