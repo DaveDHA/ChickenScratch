@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>net7.0</TargetFramework>
     <Title>ChickenScratch.Interactive</Title>
-	<VersionPrefix>1.1.0</VersionPrefix>
+	<VersionPrefix>1.2.0</VersionPrefix>
     <Authors>DaveDHA</Authors>
     <Description>Polyglot Notebooks (DotNet Interactive) extension to ChickenScratch</Description>
     <Copyright> © 2023 David Andrews</Copyright>
@@ -35,8 +35,6 @@
 	</None>
     <Compile Include="Extension.fs" />	  
   </ItemGroup>
-
-  <ItemGroup />
 
   <ItemGroup>
     <PackageReference Include="Microsoft.DotNet.Interactive.Formatting" Version="1.0.0-beta.23205.1" />
