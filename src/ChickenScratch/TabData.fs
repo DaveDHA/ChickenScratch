@@ -9,12 +9,12 @@ type TabDataCell = System.Collections.Generic.KeyValuePair<string,obj>
 type TabDataRow = TabDataCell seq
 
 
-module TabDataCell =   
-    type private IsEnum<'t when 't : (new : unit -> 't)
-                    and 't : struct 
-                    and 't :> ValueType> = 't
-        
+type private IsEnum<'t when 't : (new : unit -> 't)
+                        and 't : struct 
+                        and 't :> ValueType> = 't
+    
 
+module TabDataCell =           
     let inline Cast<'t> (kvp : TabDataCell) = kvp.Value :?> 't
 
 
@@ -59,51 +59,40 @@ module TabDataCell =
 
 
 module TabDataRow =
-    let inline Value name (row : TabDataRow) = 
-        row |> Seq.find (fun kvp -> kvp.Key = name) |> TabDataCell.Cast
+    let inline Value<'t> name (row : TabDataRow) = 
+        row |> Seq.find (fun kvp -> kvp.Key = name) |> TabDataCell.Cast<'t>
 
 
-    let inline OptionalValue name (row : TabDataRow) = 
+    let inline OptionalValue<'t> name (row : TabDataRow) = 
         row 
         |> Seq.tryFind (fun kvp -> kvp.Key = name) 
         |> function
-            | Some kvp -> TabDataCell.CastOptional kvp
+            | Some kvp -> TabDataCell.CastOptional<'t> kvp
             | _ -> None
         
 
-    let inline EnumValueWithConvention convention name (row : TabDataRow) = 
-        row |> Seq.find (fun kvp -> kvp.Key = name) |> TabDataCell.ParseEnumWithConvention convention
+    let inline EnumValueWithConvention<'t when IsEnum<'t>> convention name (row : TabDataRow) = 
+        row |> Seq.find (fun kvp -> kvp.Key = name) |> TabDataCell.ParseEnumWithConvention<'t> convention
 
 
-    let inline EnumValue name row = EnumValueWithConvention PascalCase name row
+    let inline EnumValue<'t when IsEnum<'t>> name row = EnumValueWithConvention<'t> PascalCase name row
 
 
-    let inline OptionalEnumValueWithConvention convention name (row : TabDataRow) =
+    let inline OptionalEnumValueWithConvention<'t when IsEnum<'t>> convention name (row : TabDataRow) =
         row 
         |> Seq.tryFind (fun kvp -> kvp.Key = name)
-        |> function
-            | Some kvp -> TabDataCell.ParseOptionalEnumWithConvention convention kvp
-            | _ -> None
+        |> Option.bind (TabDataCell.ParseOptionalEnumWithConvention<'t> convention)
 
 
-    let inline OptionalEnumValue name row = OptionalEnumValueWithConvention PascalCase name row
+    let inline OptionalEnumValue<'t when IsEnum<'t>> name row = OptionalEnumValueWithConvention<'t> PascalCase name row
 
 
-    //let inline UnionValueWithConvention convention name (row : TabDataRow) = 
-    //    row |> Seq.find (fun kvp -> kvp.Key = name) |> TabDataCell.ParseUnionWithConvention convention
+    let inline UnionValue<'t> name (row : TabDataRow) = 
+        row |> Seq.find (fun kvp -> kvp.Key = name) |> TabDataCell.ParseUnion<'t>
 
 
-    //let inline UnionValue name row = UnionValueWithConvention PascalCase name row
-
-
-    //let inline OptionalUnionValueWithConvention convention name (row : TabDataRow) =
-    //    row 
-    //    |> Seq.tryFind (fun kvp -> kvp.Key = name) 
-    //    |> function
-    //        | Some kvp -> TabDataCell.ParseOptionalUnionWithConvention convention kvp
-    //        | _ -> None        
-
-
-    //let inline OptionalUnionValue name row = OptionalUnionValueWithConvention PascalCase name row
-
-
+    let inline OptionalUnionValue<'t> name (row : TabDataRow) =
+        row 
+        |> Seq.tryFind (fun kvp -> kvp.Key = name) 
+        |> Option.bind (TabDataCell.ParseOptionalUnion<'t>)
+      
