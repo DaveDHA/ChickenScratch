@@ -1,6 +1,7 @@
 ﻿namespace Testing.ChickenScratch.TabData
 
 open System
+open System.Collections.Generic
 open Xunit
 open FsUnit.Xunit
 open ChickenScratch
@@ -9,8 +10,6 @@ open ChickenScratch.Utility
 
 [<AutoOpen>]
 module TestData =
-    open System.Collections.Generic
-
     type TestEnum =
     | camelValue = 1
     | PascalValue = 2
@@ -314,7 +313,7 @@ module TabDataRowTests =
         TestRows[1] |> TabDataRow.Value<string> "StringValue" |> should equal "Test2"        
         TestRows[0] |> TabDataRow.Value<DateTime> "DateTimeValue" |> should equal (DateTime(1955, 11, 5))
         TestRows[1] |> TabDataRow.Value<DateTime> "DateTimeValue" |> should equal (DateTime(1985, 11, 5))
-
+  
 
     [<Fact>]
     let ``Value throws InvalidCastException``() =
@@ -341,6 +340,12 @@ module TabDataRowTests =
     [<Fact>]
     let ``Value does not throw NullReferenceException when type is nullable``() =
         TestRows[3] |> TabDataRow.Value<string> "StringValue" |> should be null
+
+
+    [<Fact>]
+    let ``Value throws KeyNotFoundException``() =    
+        (fun () -> TestRows[0] |> TabDataRow.Value<int> "NotAValue" |> ignore)
+        |> should throw typeof<KeyNotFoundException>
 
 
     //----------------------------------------------------
@@ -380,6 +385,12 @@ module TabDataRowTests =
         TestRows[3] |> TabDataRow.OptionalValue<DateTime> "DateTimeValue" |> should equal Option<DateTime>.None
 
     
+    [<Fact>]
+    let ``OptionalValue throws KeyNotFoundException``() =    
+        (fun () -> TestRows[0] |> TabDataRow.OptionalValue<int> "NotAValue" |> ignore)
+        |> should throw typeof<KeyNotFoundException>
+
+
     //----------------------------------------------------
     // EnumValueWithConvention
     [<Fact>]
@@ -415,6 +426,12 @@ module TabDataRowTests =
         |> should throw typeof<ArgumentNullException>        
 
 
+    [<Fact>]
+    let ``EnumValueWithConvention throws KeyNotFoundException``() =    
+        (fun () -> TestRows[0] |> TabDataRow.EnumValueWithConvention<TestEnum> PascalCase "NotAValue" |> ignore)
+        |> should throw typeof<KeyNotFoundException>
+
+
     //----------------------------------------------------
     // EnumValue
     [<Fact>]
@@ -444,7 +461,13 @@ module TabDataRowTests =
     [<Fact>]
     let ``EnumValue throws ArgumentNullException``() =
         (fun () -> TestRows[3] |> TabDataRow.EnumValue<TestEnum> "EnumValue" |> ignore) 
-        |> should throw typeof<ArgumentNullException>        
+        |> should throw typeof<ArgumentNullException>   
+        
+
+    [<Fact>]
+    let ``EnumValue throws KeyNotFoundException``() =    
+        (fun () -> TestRows[0] |> TabDataRow.EnumValue<TestEnum> "NotAValue" |> ignore)
+        |> should throw typeof<KeyNotFoundException>
 
     
     //----------------------------------------------------
@@ -482,6 +505,12 @@ module TabDataRowTests =
         |> should equal Option<TestEnum>.None
 
     
+    [<Fact>]
+    let ``OptionalEnumValueWithConvention throws KeyNotFoundException``() =    
+        (fun () -> TestRows[0] |> TabDataRow.OptionalEnumValueWithConvention<TestEnum> SnakeCase "NotAValue" |> ignore)
+        |> should throw typeof<KeyNotFoundException>
+
+
     //----------------------------------------------------
     // OptionalEnumValue
     [<Fact>]
@@ -514,6 +543,12 @@ module TabDataRowTests =
         |> should equal Option<TestEnum>.None
 
 
+    [<Fact>]
+    let ``OptionalEnumValue throws KeyNotFoundException``() =    
+        (fun () -> TestRows[0] |> TabDataRow.OptionalEnumValue<TestEnum> "NotAValue" |> ignore)
+        |> should throw typeof<KeyNotFoundException>
+
+    
     //----------------------------------------------------
     // UnionValue    
     [<Fact>]
@@ -544,6 +579,12 @@ module TabDataRowTests =
     let ``UnionValue throws ArgumentNullException``() =
         (fun () -> TestRows[3] |> TabDataRow.UnionValue<TestUnion> "UnionValue" |> ignore)
         |> should throw typeof<ArgumentNullException>
+
+
+    [<Fact>]
+    let ``UnionValue throws KeyNotFoundException``() =    
+        (fun () -> TestRows[0] |> TabDataRow.UnionValue<TestUnion> "NotAValue" |> ignore)
+        |> should throw typeof<KeyNotFoundException>
 
 
     //----------------------------------------------------
@@ -577,4 +618,9 @@ module TabDataRowTests =
         TestRows[3] |> TabDataRow.OptionalUnionValue<TestUnion> "UnionValue"
         |> should equal Option<TestUnion>.None
     
+
+    [<Fact>]
+    let ``OptionalUnionValue throws KeyNotFoundException``() =    
+        (fun () -> TestRows[0] |> TabDataRow.OptionalUnionValue<TestUnion> "NotAValue" |> ignore)
+        |> should throw typeof<KeyNotFoundException>
     

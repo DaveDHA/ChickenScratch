@@ -65,10 +65,8 @@ module TabDataRow =
 
     let inline OptionalValue<'t> name (row : TabDataRow) = 
         row 
-        |> Seq.tryFind (fun kvp -> kvp.Key = name) 
-        |> function
-            | Some kvp -> TabDataCell.CastOptional<'t> kvp
-            | _ -> None
+        |> Seq.find (fun kvp -> kvp.Key = name) 
+        |> TabDataCell.CastOptional<'t>            
         
 
     let inline EnumValueWithConvention<'t when IsEnum<'t>> convention name (row : TabDataRow) = 
@@ -80,8 +78,8 @@ module TabDataRow =
 
     let inline OptionalEnumValueWithConvention<'t when IsEnum<'t>> convention name (row : TabDataRow) =
         row 
-        |> Seq.tryFind (fun kvp -> kvp.Key = name)
-        |> Option.bind (TabDataCell.ParseOptionalEnumWithConvention<'t> convention)
+        |> Seq.find (fun kvp -> kvp.Key = name)
+        |> TabDataCell.ParseOptionalEnumWithConvention<'t> convention
 
 
     let inline OptionalEnumValue<'t when IsEnum<'t>> name row = OptionalEnumValueWithConvention<'t> PascalCase name row
@@ -93,6 +91,6 @@ module TabDataRow =
 
     let inline OptionalUnionValue<'t> name (row : TabDataRow) =
         row 
-        |> Seq.tryFind (fun kvp -> kvp.Key = name) 
-        |> Option.bind (TabDataCell.ParseOptionalUnion<'t>)
+        |> Seq.find (fun kvp -> kvp.Key = name) 
+        |> TabDataCell.ParseOptionalUnion<'t>
       
