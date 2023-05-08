@@ -16,6 +16,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="resources\ExtensionStyle.css" />
     <Content Include="nugetcontent\extension.dib" />
     <None Include="..\..\License.txt" Link="NugetContent\License.txt">
       <Pack>True</Pack>
@@ -45,6 +46,8 @@
     <ProjectReference Include="..\ChickenScratch\ChickenScratch.fsproj" />
   </ItemGroup>
 
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Resources\" />
+  </ItemGroup>
 
 </Project>
