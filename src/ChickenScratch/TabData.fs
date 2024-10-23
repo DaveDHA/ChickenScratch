@@ -14,7 +14,8 @@ type private IsEnum<'t when 't : (new : unit -> 't)
                         and 't :> ValueType> = 't
     
 
-type TabDataParseException(targetType : Type, ?kvp : TabDataCell, ?innerEx) =
+type TabDataParseException(targetType : Type, ?kvp : TabDataCell, ?colKey, ?innerEx) =
+    
     inherit Exception("", match innerEx with | Some x -> x | _ -> null)
 
         
@@ -22,6 +23,10 @@ type TabDataParseException(targetType : Type, ?kvp : TabDataCell, ?innerEx) =
         seq {
             yield "Failed to parse tabular data"
                         
+            match colKey with
+            | Some x -> yield $"Column key: '{x}'"
+            | _ -> ()
+
             match kvp with
             | Some x ->
                 yield $"Tabular data key: {x.Key}"
@@ -45,7 +50,7 @@ module TabDataCell =
         try f kvp
         with
             | :? TabDataParseException as ex -> reraise()
-            | ex -> raise (TabDataParseException(typeof<'t>, kvp, ex))   
+            | ex -> raise (TabDataParseException(typeof<'t>, kvp, innerEx = ex))   
 
     let inline Cast<'t> kvp = kvp |> try' (fun kvp -> kvp.Value :?> 't)
     
@@ -100,45 +105,52 @@ module TabDataCell =
 
 
 module TabDataRow =
-    //let inline private try'<'t> (f : unit -> 't) (row : TabDataRow) =
-    //    try f()
-    //    with
-    //        | :? TabDataParseException as ex -> reraise()
-    //        | ex -> raise (TabDataParseException(typeof<'t>, kvp, ex))   
+    let inline private try'<'t> colKey (f : unit -> 't) =
+        try f()
+        with
+            | :? TabDataParseException as ex -> reraise()
+            | ex -> raise (TabDataParseException(typeof<'t>, colKey = colKey, innerEx = ex))   
 
 
     let inline Value<'t> name (row : TabDataRow) = 
-        row |> Seq.find (fun kvp -> kvp.Key = name) |> TabDataCell.Cast<'t>
+        try' name (fun () -> row |> Seq.find (fun kvp -> kvp.Key = name) |> TabDataCell.Cast<'t>)
 
 
     let inline OptionalValue<'t> name (row : TabDataRow) = 
-        row 
-        |> Seq.find (fun kvp -> kvp.Key = name) 
-        |> TabDataCell.CastOptional<'t>            
-        
+        try' name (fun () -> 
+            row 
+            |> Seq.find (fun kvp -> kvp.Key = name) 
+            |> TabDataCell.CastOptional<'t>            
+        )
 
     let inline EnumValueWithConvention<'t when IsEnum<'t>> convention name (row : TabDataRow) = 
-        row |> Seq.find (fun kvp -> kvp.Key = name) |> TabDataCell.ParseEnumWithConvention<'t> convention
+        try' name (fun () ->
+            row |> Seq.find (fun kvp -> kvp.Key = name) |> TabDataCell.ParseEnumWithConvention<'t> convention
+        )
 
 
     let inline EnumValue<'t when IsEnum<'t>> name row = EnumValueWithConvention<'t> PascalCase name row
 
 
     let inline OptionalEnumValueWithConvention<'t when IsEnum<'t>> convention name (row : TabDataRow) =
-        row 
-        |> Seq.find (fun kvp -> kvp.Key = name)
-        |> TabDataCell.ParseOptionalEnumWithConvention<'t> convention
+        try' name (fun () -> 
+            row 
+            |> Seq.find (fun kvp -> kvp.Key = name)
+            |> TabDataCell.ParseOptionalEnumWithConvention<'t> convention
+        )
 
 
     let inline OptionalEnumValue<'t when IsEnum<'t>> name row = OptionalEnumValueWithConvention<'t> PascalCase name row
 
 
     let inline UnionValue<'t> name (row : TabDataRow) = 
-        row |> Seq.find (fun kvp -> kvp.Key = name) |> TabDataCell.ParseUnion<'t>
+        try' name (fun () -> row |> Seq.find (fun kvp -> kvp.Key = name) |> TabDataCell.ParseUnion<'t>)
 
 
     let inline OptionalUnionValue<'t> name (row : TabDataRow) =
-        row 
-        |> Seq.find (fun kvp -> kvp.Key = name) 
-        |> TabDataCell.ParseOptionalUnion<'t>
+        try' name (fun () -> 
+            row 
+            |> Seq.find (fun kvp -> kvp.Key = name) 
+            |> TabDataCell.ParseOptionalUnion<'t>
+        )
       
