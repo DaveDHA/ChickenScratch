@@ -14,41 +14,82 @@ type private IsEnum<'t when 't : (new : unit -> 't)
                         and 't :> ValueType> = 't
     
 
+type TabDataParseException(targetType : Type, ?kvp : TabDataCell, ?innerEx) =
+    inherit Exception("", match innerEx with | Some x -> x | _ -> null)
+
+        
+    override this.Message = 
+        seq {
+            yield "Failed to parse tabular data"
+                        
+            match kvp with
+            | Some x ->
+                yield $"Tabular data key: {x.Key}"
+                let value = if x.Value <> null then x.Value else box "null"
+                yield $"Tabular data value: {value}"
+            | _ -> ()
+                        
+            yield $"Target type: {targetType.FullName}"
+
+            match innerEx with
+            | Some x -> yield x.Message
+            | _ -> ()            
+        }
+        |> String.concat ". "
+
+
+
+
 module TabDataCell =           
-    let inline Cast<'t> (kvp : TabDataCell) = kvp.Value :?> 't
+    let inline private try'<'t> (f : TabDataCell -> 't) (kvp : TabDataCell) =
+        try f kvp
+        with
+            | :? TabDataParseException as ex -> reraise()
+            | ex -> raise (TabDataParseException(typeof<'t>, kvp, ex))   
 
+    let inline Cast<'t> kvp = kvp |> try' (fun kvp -> kvp.Value :?> 't)
+    
 
-    let inline CastOptional<'t> (kvp : TabDataCell) = 
+    let inline CastOptional<'t> (kvp : TabDataCell) = kvp |> try' (fun kvp ->
         match kvp.Value with
         | null -> None
         | _ -> Some (Cast<'t> kvp)
+    )
 
 
     let inline ParseEnumWithConvention<'t when IsEnum<'t>> convention (kvp : TabDataCell) = 
-        kvp.Value :?> string |> String.toNamingConvention convention |> Enum.Parse<'t>
+        kvp |> try' (fun kvp -> 
+            kvp.Value :?> string |> String.toNamingConvention convention |> Enum.Parse<'t>
+        )
 
 
-    let inline ParseEnum<'t when IsEnum<'t>> kvp = ParseEnumWithConvention<'t> PascalCase kvp
+    let inline ParseEnum<'t when IsEnum<'t>> kvp = kvp |> try' (fun kvp -> 
+        ParseEnumWithConvention<'t> PascalCase kvp
+    )
 
 
     let inline ParseOptionalEnumWithConvention<'t when IsEnum<'t>> convention (kvp : TabDataCell) = 
-        match kvp.Value with
-        | null -> None
-        | _ -> Some (ParseEnumWithConvention<'t> convention kvp)
+        kvp |> try' (fun kvp ->
+            match kvp.Value with
+            | null -> None
+            | _ -> Some (ParseEnumWithConvention<'t> convention kvp)
+        )
 
 
-    let inline ParseOptionalEnum<'t when IsEnum<'t>> kvp = 
+    let inline ParseOptionalEnum<'t when IsEnum<'t>> kvp = kvp |> try' (fun kvp ->
         ParseOptionalEnumWithConvention<'t> PascalCase kvp
+    )
 
 
-    let inline ParseUnion<'t> (kvp : TabDataCell) = 
-        let case = kvp.Value :?> string |> String.toNamingConvention PascalCase
+    let inline ParseUnion<'t> (kvp : TabDataCell) = kvp |> try' (fun kvp ->
+        let case = kvp.Value :?> string |> String.toNamingConvention PascalCase    
         
         FSharpType.GetUnionCases typeof<'t> 
         |> Array.tryFind (fun uc -> uc.Name = case)
         |> function
             | Some uc -> FSharpValue.MakeUnion(uc, [||]) :?> 't
             | _ -> invalidArg "unionCase" (sprintf "Could not find union case %s" case)
+    )
 
 
     let inline ParseOptionalUnion<'t> (kvp : TabDataCell) = 
@@ -59,6 +100,13 @@ module TabDataCell =
 
 
 module TabDataRow =
+    //let inline private try'<'t> (f : unit -> 't) (row : TabDataRow) =
+    //    try f()
+    //    with
+    //        | :? TabDataParseException as ex -> reraise()
+    //        | ex -> raise (TabDataParseException(typeof<'t>, kvp, ex))   
+
+
     let inline Value<'t> name (row : TabDataRow) = 
         row |> Seq.find (fun kvp -> kvp.Key = name) |> TabDataCell.Cast<'t>
 

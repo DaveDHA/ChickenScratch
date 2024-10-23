@@ -6,6 +6,7 @@ open Xunit
 open FsUnit.Xunit
 open ChickenScratch
 open ChickenScratch.Utility
+open Testing.ChickenScratch.TestingUtility
 
 
 [<AutoOpen>]
@@ -51,7 +52,9 @@ module TestData =
     ]
 
 
+  
 module TabDataCellTests =    
+
     //----------------------------------------------------
     // Cast
     [<Fact>]
@@ -68,17 +71,40 @@ module TabDataCellTests =
 
     [<Fact>]
     let ``Cast throws InvalidCastException``() =
-        (fun () -> TestRows[0][0] |> TabDataCell.Cast<string> |> ignore) |> should throw typeof<InvalidCastException>
-        (fun () -> TestRows[0][1] |> TabDataCell.Cast<TestEnum> |> ignore) |> should throw typeof<InvalidCastException>
-        (fun () -> TestRows[0][0] |> TabDataCell.Cast<DateTime> |> ignore) |> should throw typeof<InvalidCastException>
-        (fun () -> TestRows[0][1] |> TabDataCell.Cast<int> |> ignore) |> should throw typeof<InvalidCastException>
-
+        (fun () -> TestRows[0][0] |> TabDataCell.Cast<string> |> ignore) 
+        |> should throwWith [
+                ExnType typeof<TabDataParseException>
+                InnerExnType typeof<InvalidCastException>
+                MessageContains [ "IntValue" ; "1" ; "System.String" ]                
+            ]
+        
+        (fun () -> TestRows[0][1] |> TabDataCell.Cast<TestEnum> |> ignore) 
+        |> should throwWith [
+                InnerExnType typeof<InvalidCastException>
+                MessageContains [ "StringValue" ; "Test" ; "TestEnum" ] 
+            ]
+        
 
     [<Fact>]
     let ``Cast throws NullReferenceException``() =
-        (fun () -> TestRows[3][0] |> TabDataCell.Cast<int> |> ignore) |> should throw typeof<NullReferenceException>        
-        (fun () -> TestRows[3][0] |> TabDataCell.Cast<TestEnum> |> ignore) |> should throw typeof<NullReferenceException>        
-        (fun () -> TestRows[3][4] |> TabDataCell.Cast<DateTime> |> ignore) |> should throw typeof<NullReferenceException>
+        (fun () -> TestRows[3][0] |> TabDataCell.Cast<int> |> ignore) 
+        |> should throwWith [
+                ExnType typeof<TabDataParseException>
+                InnerExnType typeof<NullReferenceException>        
+                MessageContains [ "IntValue" ; "null" ; "System.Int32" ]
+            ]
+        
+        (fun () -> TestRows[3][0] |> TabDataCell.Cast<TestEnum> |> ignore) 
+        |> should throwWith [
+            InnerExnType typeof<NullReferenceException>        
+            MessageContains [ "IntValue" ; "null" ; "TestEnum" ]
+        ]
+
+        (fun () -> TestRows[3][4] |> TabDataCell.Cast<DateTime> |> ignore) 
+        |> should throwWith [
+            InnerExnType typeof<NullReferenceException>        
+            MessageContains [ "DateTimeValue" ; "null" ; "DateTime" ]
+        ]
 
 
     [<Fact>]
@@ -102,11 +128,19 @@ module TabDataCellTests =
 
     [<Fact>]
     let ``CastOptional throws InvalidCastException``() =                
-        (fun () -> TestRows[0][0] |> TabDataCell.CastOptional<string> |> ignore) |> should throw typeof<InvalidCastException>
-        (fun () -> TestRows[0][1] |> TabDataCell.CastOptional<TestEnum> |> ignore) |> should throw typeof<InvalidCastException>
-        (fun () -> TestRows[0][0] |> TabDataCell.CastOptional<DateTime> |> ignore) |> should throw typeof<InvalidCastException>
-        (fun () -> TestRows[0][1] |> TabDataCell.CastOptional<int> |> ignore) |> should throw typeof<InvalidCastException>
-
+        (fun () -> TestRows[0][0] |> TabDataCell.CastOptional<string> |> ignore) 
+        |> should throwWith [
+            ExnType typeof<TabDataParseException>
+            InnerExnType typeof<InvalidCastException>
+            MessageContains [ "IntValue" ; "1" ; "System.String" ]                
+        ]
+        (fun () -> TestRows[0][0] |> TabDataCell.CastOptional<DateTime> |> ignore) 
+        |> should throwWith [
+            ExnType typeof<TabDataParseException>
+            InnerExnType typeof<InvalidCastException>
+            MessageContains [ "IntValue" ; "1" ; "DateTime" ]                
+        ]
+        
 
     [<Fact>]
     let ``CastOptional returns None for null``() =
@@ -129,22 +163,38 @@ module TabDataCellTests =
     [<Fact>]
     let ``ParseEnumWithConvention throws ArgumentException``() =
         (fun () -> TestRows[0][1] |> TabDataCell.ParseEnumWithConvention<TestEnum> CamelCase |> ignore) 
-        |> should throw typeof<ArgumentException>
+        |> should throwWith [
+            ExnType typeof<TabDataParseException>
+            InnerExnType typeof<ArgumentException>
+            MessageContains [ "StringValue" ; "Test" ; "TestEnum" ]                
+        ]
 
 
     [<Fact>]
     let ``ParseEnumWithConvention throws InvalidCastException``() =
         (fun () -> TestRows[0][0] |> TabDataCell.ParseEnumWithConvention<TestEnum> PascalCase |> ignore) 
-        |> should throw typeof<InvalidCastException>
+        |> should throwWith [
+            ExnType typeof<TabDataParseException>
+            InnerExnType typeof<InvalidCastException>
+            MessageContains [ "IntValue" ; "1" ; "TestEnum" ]                
+        ]
 
         (fun () -> TestRows[0][4] |> TabDataCell.ParseEnumWithConvention<TestEnum> SnakeCase |> ignore) 
-        |> should throw typeof<InvalidCastException>
+        |> should throwWith [
+            ExnType typeof<TabDataParseException>
+            InnerExnType typeof<InvalidCastException>
+            MessageContains [ "DateTimeValue" ; "11/5/1955" ; "TestEnum" ]                
+        ]
 
 
     [<Fact>]
     let ``ParseEnumWithConvention throws ArgumentNullException``() =
         (fun () -> TestRows[3][2] |> TabDataCell.ParseEnumWithConvention<TestEnum> PascalCase |> ignore) 
-        |> should throw typeof<ArgumentNullException>        
+        |> should throwWith [
+            ExnType typeof<TabDataParseException>
+            InnerExnType typeof<ArgumentNullException>
+            MessageContains [ "EnumValue" ; "null" ; "TestEnum" ]                
+        ]        
 
 
     //----------------------------------------------------
@@ -157,22 +207,38 @@ module TabDataCellTests =
     [<Fact>]
     let ``ParseEnum throws ArgumentException``() =
         (fun () -> TestRows[0][1] |> TabDataCell.ParseEnum<TestEnum> |> ignore) 
-        |> should throw typeof<ArgumentException>
+        |> should throwWith [
+                ExnType typeof<TabDataParseException>
+                InnerExnType typeof<ArgumentException>
+                MessageContains [ "StringValue" ; "Test" ; "TestEnum" ]
+            ]
 
 
     [<Fact>]
     let ``ParseEnum throws InvalidCastException``() =
         (fun () -> TestRows[0][0] |> TabDataCell.ParseEnum<TestEnum> |> ignore) 
-        |> should throw typeof<InvalidCastException>
+        |> should throwWith [
+            ExnType typeof<TabDataParseException>
+            InnerExnType typeof<InvalidCastException>
+            MessageContains [ "IntValue" ; "1" ; "TestEnum" ]
+        ]
 
         (fun () -> TestRows[0][4] |> TabDataCell.ParseEnum<TestEnum> |> ignore) 
-        |> should throw typeof<InvalidCastException>
+        |> should throwWith [
+            ExnType typeof<TabDataParseException>
+            InnerExnType typeof<InvalidCastException>
+            MessageContains [ "DateTimeValue" ; "11/5/1955" ; "TestEnum" ]
+        ]
 
 
     [<Fact>]
     let ``ParseEnum throws ArgumentNullException``() =
         (fun () -> TestRows[3][2] |> TabDataCell.ParseEnum<TestEnum> |> ignore) 
-        |> should throw typeof<ArgumentNullException>        
+        |> should throwWith [
+            ExnType typeof<TabDataParseException>
+            InnerExnType typeof<ArgumentNullException>
+            MessageContains [ "EnumValue" ; "null" ; "TestEnum" ]
+        ]
         
 
     //----------------------------------------------------
@@ -198,16 +264,28 @@ module TabDataCellTests =
     [<Fact>]
     let ``ParseOptionalEnumWithConvention throws ArgumentException``() =
         (fun () -> TestRows[0][1] |> TabDataCell.ParseOptionalEnumWithConvention<TestEnum> CamelCase |> ignore) 
-        |> should throw typeof<ArgumentException>
+        |> should throwWith [
+            ExnType typeof<TabDataParseException>
+            InnerExnType typeof<ArgumentException>
+            MessageContains [ "StringValue" ; "Test" ; "TestEnum" ]                
+        ]
 
 
     [<Fact>]
     let ``ParseOptionalEnumWithConvention throws InvalidCastException``() =
         (fun () -> TestRows[0][0] |> TabDataCell.ParseOptionalEnumWithConvention<TestEnum> PascalCase |> ignore) 
-        |> should throw typeof<InvalidCastException>
+        |> should throwWith [
+            ExnType typeof<TabDataParseException>
+            InnerExnType typeof<InvalidCastException>
+            MessageContains [ "IntValue" ; "1" ; "TestEnum" ]                
+        ]
 
         (fun () -> TestRows[0][4] |> TabDataCell.ParseOptionalEnumWithConvention<TestEnum> SnakeCase |> ignore) 
-        |> should throw typeof<InvalidCastException>
+        |> should throwWith [
+            ExnType typeof<TabDataParseException>
+            InnerExnType typeof<InvalidCastException>
+            MessageContains [ "DateTimeValue" ; "11/5/1955" ; "TestEnum" ]                
+        ]
 
 
     //----------------------------------------------------
@@ -225,16 +303,21 @@ module TabDataCellTests =
     [<Fact>]
     let ``ParseOptionalEnum throws ArgumentException``() =
         (fun () -> TestRows[0][1] |> TabDataCell.ParseOptionalEnum<TestEnum> |> ignore) 
-        |> should throw typeof<ArgumentException>
+        |> should throwWith [
+            ExnType typeof<TabDataParseException>
+            InnerExnType typeof<ArgumentException>
+            MessageContains [ "StringValue" ; "Test" ; "TestEnum" ]                
+        ]
 
 
     [<Fact>]
     let ``ParseOptionalEnum throws InvalidCastException``() =
         (fun () -> TestRows[0][0] |> TabDataCell.ParseOptionalEnum<TestEnum> |> ignore) 
-        |> should throw typeof<InvalidCastException>
-
-        (fun () -> TestRows[0][4] |> TabDataCell.ParseOptionalEnum<TestEnum> |> ignore) 
-        |> should throw typeof<InvalidCastException>
+        |> should throwWith [
+            ExnType typeof<TabDataParseException>
+            InnerExnType typeof<InvalidCastException>
+            MessageContains [ "IntValue" ; "1" ; "TestEnum" ]                
+        ]
     
         
     //----------------------------------------------------
@@ -248,25 +331,45 @@ module TabDataCellTests =
     [<Fact>]
     let ``ParseUnion throws ArgumentException``() =
         (fun () -> TestRows[0][1] |> TabDataCell.ParseUnion<TestUnion> |> ignore)
-        |> should throw typeof<ArgumentException>
+        |> should throwWith [
+            ExnType typeof<TabDataParseException>
+            InnerExnType typeof<ArgumentException>
+            MessageContains [ "StringValue" ; "Test" ; "TestUnion" ]                
+        ]
 
         (fun () -> TestRows[0][2] |> TabDataCell.ParseUnion<TestUnion> |> ignore)
-        |> should throw typeof<ArgumentException>
+        |> should throwWith [
+            ExnType typeof<TabDataParseException>
+            InnerExnType typeof<ArgumentException>
+            MessageContains [ "EnumValue" ; "PascalValue" ; "TestUnion" ]                
+        ]
 
 
     [<Fact>]
     let ``ParseUnion throws InvalidCastException``() =
         (fun () -> TestRows[0][0] |> TabDataCell.ParseUnion<TestUnion> |> ignore)
-        |> should throw typeof<InvalidCastException>
+        |> should throwWith [
+            ExnType typeof<TabDataParseException>
+            InnerExnType typeof<InvalidCastException>
+            MessageContains [ "IntValue" ; "1" ; "TestUnion" ]                
+        ]
 
         (fun () -> TestRows[0][4] |> TabDataCell.ParseUnion<TestUnion> |> ignore)
-        |> should throw typeof<InvalidCastException>
+        |> should throwWith [
+            ExnType typeof<TabDataParseException>
+            InnerExnType typeof<InvalidCastException>
+            MessageContains [ "DateTimeValue" ; "11/5/1955" ; "TestUnion" ]                
+        ]
 
 
     [<Fact>]
     let ``ParseUnion throws ArgumentNullException``() =
         (fun () -> TestRows[3][3] |> TabDataCell.ParseUnion<TestUnion> |> ignore)
-        |> should throw typeof<ArgumentNullException>
+        |> should throwWith [
+            ExnType typeof<TabDataParseException>
+            InnerExnType typeof<ArgumentNullException>
+            MessageContains [ "UnionValue" ; "null" ; "TestUnion" ]                
+        ]
 
 
     //----------------------------------------------------
@@ -285,19 +388,35 @@ module TabDataCellTests =
     [<Fact>]
     let ``ParseOptionalUnion throws ArgumentException``() =
         (fun () -> TestRows[0][1] |> TabDataCell.ParseOptionalUnion<TestUnion> |> ignore)
-        |> should throw typeof<ArgumentException>
+        |> should throwWith [
+            ExnType typeof<TabDataParseException>
+            InnerExnType typeof<ArgumentException>
+            MessageContains [ "StringValue" ; "Test" ; "TestUnion" ]                
+        ]
 
         (fun () -> TestRows[0][2] |> TabDataCell.ParseOptionalUnion<TestUnion> |> ignore)
-        |> should throw typeof<ArgumentException>
+        |> should throwWith [
+            ExnType typeof<TabDataParseException>
+            InnerExnType typeof<ArgumentException>
+            MessageContains [ "EnumValue" ; "PascalValue" ; "TestUnion" ]                
+        ]
 
 
     [<Fact>]
     let ``ParseOptionalUnion throws InvalidCastException``() =
         (fun () -> TestRows[0][0] |> TabDataCell.ParseOptionalUnion<TestUnion> |> ignore)
-        |> should throw typeof<InvalidCastException>
+        |> should throwWith [
+            ExnType typeof<TabDataParseException>
+            InnerExnType typeof<InvalidCastException>
+            MessageContains [ "IntValue" ; "1" ; "TestUnion" ]                
+        ]
 
         (fun () -> TestRows[0][4] |> TabDataCell.ParseOptionalUnion<TestUnion> |> ignore)
-        |> should throw typeof<InvalidCastException>    
+        |> should throwWith [
+            ExnType typeof<TabDataParseException>
+            InnerExnType typeof<InvalidCastException>
+            MessageContains [ "DateTimeValue" ; "11/5/1955" ; "TestUnion" ]                
+        ]  
 
 
 module TabDataRowTests =  
@@ -443,31 +562,35 @@ module TabDataRowTests =
     [<Fact>]
     let ``EnumValue throws ArgumentException``() =
         (fun () -> TestRows[0] |> TabDataRow.EnumValue<TestEnum> "StringValue" |> ignore) 
-        |> should throw typeof<ArgumentException>
+        |> should throwWith [ InnerExnType typeof<ArgumentException> ]
 
         (fun () -> TestRows[1] |> TabDataRow.EnumValue<TestEnum> "EnumValue" |> ignore) 
-        |> should throw typeof<ArgumentException>
+        |> should throwWith [ InnerExnType typeof<ArgumentException> ]
 
 
     [<Fact>]
     let ``EnumValue throws InvalidCastException``() =
         (fun () -> TestRows[0] |> TabDataRow.EnumValue<TestEnum> "IntValue" |> ignore) 
-        |> should throw typeof<InvalidCastException>
+        |> should throwWith [ InnerExnType typeof<InvalidCastException> ]
 
         (fun () -> TestRows[0] |> TabDataRow.EnumValue<TestEnum> "DateTimeValue" |> ignore) 
-        |> should throw typeof<InvalidCastException>
+        |> should throwWith [ InnerExnType typeof<InvalidCastException> ]
 
 
     [<Fact>]
     let ``EnumValue throws ArgumentNullException``() =
         (fun () -> TestRows[3] |> TabDataRow.EnumValue<TestEnum> "EnumValue" |> ignore) 
-        |> should throw typeof<ArgumentNullException>   
+        |> should throwWith [ InnerExnType typeof<ArgumentNullException> ]   
         
 
     [<Fact>]
     let ``EnumValue throws KeyNotFoundException``() =    
         (fun () -> TestRows[0] |> TabDataRow.EnumValue<TestEnum> "NotAValue" |> ignore)
-        |> should throw typeof<KeyNotFoundException>
+        |> should throwWith [
+                ExnType typeof<TabDataParseException>
+                InnerExnType typeof<ArgumentException>
+            ]
+        //|> should throw typeof<KeyNotFoundException>
 
     
     //----------------------------------------------------
