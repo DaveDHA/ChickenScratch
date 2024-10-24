@@ -1,0 +1,37 @@
+#!meta
+
+{"kernelInfo":{"defaultKernelName":"fsharp","items":[{"aliases":[],"languageName":"fsharp","name":"fsharp"}]}}
+
+#!csharp
+
+#!import "PackAndLoad.dib"
+
+#!fsharp
+
+open ChickenScratch
+open ChickenScratch.HtmlExpressions
+
+module TestData = 
+    let date = DateTime.Now
+    let exn = System.Exception "Test Exception"
+    let records = [
+        {| Key = "k1" ; Value = "v1" |}
+        {| Key = "k2" ; Value = "v2" |}
+    ]
+
+table {
+    tr { th { "Formatting" } ; th { "Col1" } ; th { "Col2" } ; th { "Col3" } }
+    tr {
+        td { "Strings"}
+        td { $"{TestData.date}" }
+        td { $"{TestData.exn}" }
+        td { $"{TestData.records}" }
+    }
+    tr {
+        _style "vertical-align: top"
+        td { "Using registered formatters" }
+        td { TestData.date |> ScratchHtml.UseFormatter }
+        td { TestData.exn |> ScratchHtml.UseFormatter }
+        td { TestData.records |> ScratchHtml.UseTabularFormatter }
+    }
+}

@@ -34,6 +34,7 @@
 		<Pack>True</Pack>
 		<PackagePath>\interactive-extensions\dotnet</PackagePath>
 	</None>
+	<Compile Include="OtherContent.fs" />
     <Compile Include="Extension.fs" />	  
   </ItemGroup>
 
