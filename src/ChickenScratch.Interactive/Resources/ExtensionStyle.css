@@ -1,0 +1,4 @@
+/* ChickenScratch.Interactive - styles to hide cells via cell tags in HTML exports. */
+.celltag_html_export_hide_all { display: none; }
+.celltag_html_export_hide_code .jp-Cell-inputWrapper { display: none; }
+.celltag_html_export_hide_output .jp-Cell-outputWrapper { display: none; }

@@ -4,3 +4,5 @@
 .fake
 .vs
 publish
+/src/ManualTesting/HideCells.html
+/src/ManualTesting/HideCells.pdf

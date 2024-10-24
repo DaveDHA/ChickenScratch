@@ -1,7 +1,9 @@
 ﻿module ChickenScratch.Interactive.Extension
 
 open ChickenScratch
+open Microsoft.DotNet.Interactive
 open Microsoft.DotNet.Interactive.Formatting
+open System.Reflection
 
 
 let private registerScratchNodeFormatter() =
@@ -36,3 +38,9 @@ let Load() =
     registerScratchElementFormatter()
     registerScratchNodeSourceFormatter()    
     registerScratchNodeSourceSeqFormatter()
+
+    try
+        let style = ScratchStyle.FromResource (Assembly.GetExecutingAssembly()) "ChickenScratch.Interactive.resources.ExtensionStyle.css"
+        KernelInvocationContext.Current.Display(style) |> ignore
+    with
+    | _ -> KernelInvocationContext.Current.Display("Failed to load resource ExtensionStyle.css") |> ignore

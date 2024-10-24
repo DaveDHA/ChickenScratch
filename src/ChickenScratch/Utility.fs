@@ -93,7 +93,12 @@ module String =
             | _ -> str
             
 
-        
+module Option = 
+    let mapSeq f x = 
+        match x with 
+        | Some x' -> f x'
+        | _ -> Seq.empty
+
 
 
 
