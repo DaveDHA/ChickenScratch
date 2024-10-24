@@ -34,12 +34,13 @@
 		<Pack>True</Pack>
 		<PackagePath>\interactive-extensions\dotnet</PackagePath>
 	</None>
+	<Compile Include="OtherContent.fs" />
     <Compile Include="Extension.fs" />	  
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.DotNet.Interactive.Formatting" Version="1.0.0-beta.23205.1" />
-	  <PackageReference Include="Microsoft.DotNet.Interactive" Version="1.0.0-beta.23205.1" />
+    <PackageReference Include="Microsoft.DotNet.Interactive.Formatting" Version="1.0.0-beta.24229.4" />
+	  <PackageReference Include="Microsoft.DotNet.Interactive" Version="1.0.0-beta.24229.4" />
   </ItemGroup>
 
   <ItemGroup>

@@ -44,7 +44,7 @@ module ScratchScript =
 
 
 module ScratchHtml =
-    let FromString js = RawContent js
+    let FromString html = RawContent html
 
 
     let FromStream (stream : Stream) =
