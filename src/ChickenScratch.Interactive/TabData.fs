@@ -71,7 +71,7 @@ let private colForAllNulls (field : TableSchemaFieldDescriptor) (dataLen : int) 
     | _ -> StringDataFrameColumn(field.Name, dataLen) :> DataFrameColumn
     
 
-let toDataFrameColumn (tabData : TabularDataResource) (field : TableSchemaFieldDescriptor) =
+let private toDataFrameColumn (tabData : TabularDataResource) (field : TableSchemaFieldDescriptor) =
     try
         let data = tabData.Data |> Seq.map (TabDataRow.Value<obj> field.Name)
 
