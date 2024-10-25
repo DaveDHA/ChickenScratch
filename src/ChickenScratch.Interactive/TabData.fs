@@ -18,6 +18,13 @@ let private makeCol<'t, 'c when DataFrameable<'t> and 'c :> DataFrameColumn>
         ctor(name, data |> Seq.cast<Nullable<'t>>) :> DataFrameColumn
         
 
+let private makeOptCol<'t, 'c when DataFrameable<'t> and 'c :> DataFrameColumn> 
+    (name : string) 
+    (ctor : (string * (Nullable<'t> seq) -> 'c)) 
+    (data : obj seq) =
+        ctor(name, data |> Seq.cast<Option<'t>> |> Seq.map Option.toNullable) :> DataFrameColumn
+
+
 let private colForValue (field : TableSchemaFieldDescriptor) data (value : obj) =
     match value with
     | :? bool -> makeCol field.Name BooleanDataFrameColumn data
@@ -35,7 +42,24 @@ let private colForValue (field : TableSchemaFieldDescriptor) data (value : obj) 
     | :? uint -> makeCol field.Name UInt32DataFrameColumn data
     | :? uint64 -> makeCol field.Name UInt64DataFrameColumn data
     | :? string -> StringDataFrameColumn(field.Name, (data |> Seq.cast<string>)) :> DataFrameColumn
-    | _ -> StringDataFrameColumn(field.Name, (data |> Seq.map (fun x -> x.ToString()))) :> DataFrameColumn
+    | :? Option<bool> -> makeOptCol field.Name BooleanDataFrameColumn data
+    | :? Option<byte> -> makeOptCol field.Name ByteDataFrameColumn data
+    | :? Option<char> -> makeOptCol field.Name CharDataFrameColumn data
+    | :? Option<DateTime> -> makeOptCol field.Name DateTimeDataFrameColumn data
+    | :? Option<decimal> -> makeOptCol field.Name DecimalDataFrameColumn data
+    | :? Option<double> -> makeOptCol field.Name DoubleDataFrameColumn data        
+    | :? Option<int16> -> makeOptCol field.Name Int16DataFrameColumn data
+    | :? Option<int> -> makeOptCol field.Name Int32DataFrameColumn data        
+    | :? Option<int64> -> makeOptCol field.Name Int64DataFrameColumn data
+    | :? Option<sbyte> -> makeOptCol field.Name SByteDataFrameColumn data
+    | :? Option<single> -> makeOptCol field.Name SingleDataFrameColumn data
+    | :? Option<uint16> -> makeOptCol field.Name UInt16DataFrameColumn data
+    | :? Option<uint> -> makeOptCol field.Name UInt32DataFrameColumn data
+    | :? Option<uint64> -> makeOptCol field.Name UInt64DataFrameColumn data
+    | :? Option<string> -> 
+        let data' = data |> Seq.cast<Option<string>> |> Seq.map (function Some s -> s | _ -> null)
+        StringDataFrameColumn(field.Name, data') :> DataFrameColumn
+    | _ -> StringDataFrameColumn(field.Name, (data |> Seq.map (fun x -> if x = null then null else x.ToString()))) :> DataFrameColumn
 
 
 let private colForAllNulls (field : TableSchemaFieldDescriptor) (dataLen : int) =
@@ -61,6 +85,6 @@ let toDataFrameColumn (tabData : TabularDataResource) (field : TableSchemaFieldD
         raise (System.Exception(sprintf "Exception occurred creating DataFrameColumn '%s': %s" field.Name exn.Message, exn))
     
 
-let toMsdaDataFrame (tabData : TabularDataResource) =
+let toMsDataFrame (tabData : TabularDataResource) =
     tabData.Schema.Fields |> Seq.map (toDataFrameColumn tabData) |> DataFrame 
 
