@@ -136,7 +136,7 @@ module TabularDataResourceTests =
 
 
     [<Fact>]
-    let ``toMsDataFrame converts Option types to nullable types``() =
+    let ``toMsDataFrame converts Options to nullables``() =
         let data = [
             {| IntVal = Some 32 ; DoubleVal = Some 3.14 ; StringVal = Some "Str" |}
             {| IntVal = None ; DoubleVal = None ; StringVal = None |}

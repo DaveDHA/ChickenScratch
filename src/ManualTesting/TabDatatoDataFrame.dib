@@ -1,0 +1,33 @@
+#!meta
+
+{"kernelInfo":{"defaultKernelName":"fsharp","items":[{"aliases":[],"languageName":"fsharp","name":"fsharp"},{"aliases":[],"languageName":"T-SQL","name":"sql-advWorks"}]}}
+
+#!fsharp
+
+#!import "PackAndLoad.dib"
+
+open ChickenScratch
+
+#!csharp
+
+#r "nuget:Microsoft.DotNet.Interactive.SqlServer,*-*"
+
+#!csharp
+
+#!connect mssql "Server=(localdb)\Sql2022Express;Database=AdventureWorksLT2019" --kernel-name advWorks
+
+#!csharp
+
+#!sql-advWorks --name dbSalesOrderData
+
+select * from SalesLT.SalesOrderHeader hed    
+
+#!fsharp
+
+#!share dbSalesOrderData --from sql-advWorks
+
+let df = dbSalesOrderData[0] |> TabularDataResource.toMsDataFrame
+
+df.Info().Display()
+df.Description().Display()
+df
