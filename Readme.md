@@ -1,17 +1,16 @@
 # ChickenScratch
 
-Chicken Scratch is intended to be a set of tools that help produce reasonable-looking output quickly and easily
-from F# scripts and Polyglot Notebooks.  As of now, it contains a DSL based on computation expressions for 
-building HTML.  There are a number of other, similar HTML DSLs, but I have a few special tricks planned.  
+ChickenScratch is intended to be a set of tools that help produce reasonable-looking output quickly and easily from F# scripts and Polyglot Notebooks.  The main feature that it offers is a set of Html Expressions that allow easy creation of Html content.  Although it uses computation expressions rather than functions acting on lists, it is similar in nature to the [Giraffe View Engine](https://github.com/giraffe-fsharp/Giraffe.ViewEngine) or [Feliz View Engine](https://github.com/dbrattli/Feliz.ViewEngine), but with a few extra tricks that align with the goal of quick-and-dirty output from F# scripts and Notebooks, including:
 
-I also plan on adding tools for assisting working with `TabularDataResource` data sets and provided types.  
+- It allows any type that implements `IScratchNodeSource` to be dropped directly into Html Expressions.
+- It allows content rendered with the "text/html" formatter registered with a Polyglot Notebook to be mixed in with Html Expressions.
 
-Guidance for F# Scripts can be found in the [ChickenScratch documentation](./docs/ChickenScratch.md).
+ChickenScratch (and ChickenScratch.Interactive) also includes utilities for:
 
-Guidance for Polyglot Notebooks can be found in the ChickenScratch.Interactive documentation:
+- Parsing values from a TabularDataResource in Polyglot Notebooks.
+- Converting a TabularDataResource into a Microsoft DataFrame.
+- Hiding cells from Html Exports of Polyglot Notebooks.
 
-- [Html expressions](./docs/HtmlExpressions.ipynb)
-- [Working with TabularDataResource](./docs/TabularDataResource.ipynb)
+Please refer to [the documentation](https://github.com/DaveDHA/ChickenScratch/wiki) to get started.
 
-This is very much a work in progress, and please remember that the focus is on quick and easy output from support scripts, not 
-on being the most robust HTML library available.
+This is very much a work in progress, and please remember that the focus is on quick and easy output from support scripts, not on being the most robust HTML library available.
