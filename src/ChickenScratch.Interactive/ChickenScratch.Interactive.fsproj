@@ -34,11 +34,13 @@
 		<Pack>True</Pack>
 		<PackagePath>\interactive-extensions\dotnet</PackagePath>
 	</None>
+	<Compile Include="TabData.fs" />
 	<Compile Include="OtherContent.fs" />
     <Compile Include="Extension.fs" />	  
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.Data.Analysis" Version="0.22.0-preview.24522.7" />
     <PackageReference Include="Microsoft.DotNet.Interactive.Formatting" Version="1.0.0-beta.24229.4" />
 	  <PackageReference Include="Microsoft.DotNet.Interactive" Version="1.0.0-beta.24229.4" />
   </ItemGroup>
