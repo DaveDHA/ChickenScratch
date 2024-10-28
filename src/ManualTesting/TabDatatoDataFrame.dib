@@ -1,6 +1,6 @@
 #!meta
 
-{"kernelInfo":{"defaultKernelName":"fsharp","items":[{"aliases":[],"languageName":"fsharp","name":"fsharp"},{"aliases":[],"languageName":"T-SQL","name":"sql-advWorks"}]}}
+{"kernelInfo":{"defaultKernelName":"csharp","items":[{"aliases":[],"name":"csharp"},{"aliases":[],"languageName":"fsharp","name":"fsharp"},{"aliases":[],"languageName":"T-SQL","name":"sql-advWorks"}]}}
 
 #!fsharp
 
@@ -16,11 +16,14 @@ open ChickenScratch
 
 #!connect mssql "Server=(localdb)\Sql2022Express;Database=AdventureWorksLT2019" --kernel-name advWorks
 
-#!csharp
+#!sql-advWorks
 
 #!sql-advWorks --name dbSalesOrderData
 
-select * from SalesLT.SalesOrderHeader hed    
+select 
+    SalesOrderId, OrderDate, Status, OnlineOrderFlag, 
+    SalesOrderNumber, CreditCardApprovalCode, TotalDue
+from SalesLT.SalesOrderHeader hed    
 
 #!fsharp
 
@@ -29,5 +32,4 @@ select * from SalesLT.SalesOrderHeader hed
 let df = dbSalesOrderData[0] |> TabularDataResource.toMsDataFrame
 
 df.Info().Display()
-df.Description().Display()
 df
