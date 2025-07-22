@@ -1,6 +1,6 @@
 #!meta
 
-{"kernelInfo":{"defaultKernelName":"csharp","items":[{"aliases":[],"name":"csharp"},{"aliases":[],"languageName":"fsharp","name":"fsharp"},{"aliases":[],"languageName":"T-SQL","name":"sql-advWorks"}]}}
+{"kernelInfo":{"defaultKernelName":"csharp","items":[{"name":"csharp"},{"name":"fsharp","languageName":"fsharp"},{"name":"sql-advWorks","languageName":"T-SQL"},{"name":"html","languageName":"HTML"},{"name":"http","languageName":"HTTP"},{"name":"javascript","languageName":"JavaScript","aliases":["js"]},{"name":"mermaid","languageName":"Mermaid"},{"name":"pwsh","languageName":"PowerShell","aliases":["powershell"]},{"name":"value"}]}}
 
 #!fsharp
 

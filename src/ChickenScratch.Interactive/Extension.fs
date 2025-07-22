@@ -33,11 +33,14 @@ let private registerScratchNodeSourceSeqFormatter() =
     Formatter.Register<IScratchNodeSource seq>(fmt, mimeType = "text/html")
 
 
-let Load() = 
-    registerScratchNodeFormatter()
-    registerScratchElementFormatter()
-    registerScratchNodeSourceFormatter()    
-    registerScratchNodeSourceSeqFormatter()
+let Load() =     
+    try
+        registerScratchNodeFormatter()
+        registerScratchElementFormatter()
+        registerScratchNodeSourceFormatter()    
+        registerScratchNodeSourceSeqFormatter()
+    with
+    | ex -> KernelInvocationContext.Current.Display($"Failed to register formatters: {ex.Message}") |> ignore
 
     try
         let style = ScratchStyle.FromResource (Assembly.GetExecutingAssembly()) "ChickenScratch.Interactive.resources.ExtensionStyle.css"
