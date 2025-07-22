@@ -2,7 +2,7 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.1</TargetFramework>
     <Title>ChickenScratch</Title>
-	<VersionPrefix>1.4.0</VersionPrefix>
+	<VersionPrefix>1.5.0</VersionPrefix>
     <Authors>DaveDHA</Authors>
     <Description>Utilities to help produce rough Html reports from fsx scripts.</Description>
     <Copyright> © 2023 David Andrews</Copyright>
