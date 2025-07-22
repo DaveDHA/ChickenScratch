@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
     <Title>ChickenScratch.Interactive</Title>
-	<VersionPrefix>1.3.0</VersionPrefix>
+	<VersionPrefix>1.4.0</VersionPrefix>
     <Authors>DaveDHA</Authors>
     <Description>Polyglot Notebooks (DotNet Interactive) extension to ChickenScratch</Description>
     <Copyright> © 2023 David Andrews</Copyright>
@@ -40,9 +40,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Data.Analysis" Version="0.22.0-preview.24522.7" />
-    <PackageReference Include="Microsoft.DotNet.Interactive.Formatting" Version="1.0.0-beta.24229.4" />
-	  <PackageReference Include="Microsoft.DotNet.Interactive" Version="1.0.0-beta.24229.4" />
+    <PackageReference Include="Microsoft.Data.Analysis" Version="0.23.0-preview.1.25127.4" />
+    <PackageReference Include="Microsoft.DotNet.Interactive.Formatting" Version="1.0.0-beta.25323.1" />
+	  <PackageReference Include="Microsoft.DotNet.Interactive" Version="1.0.0-beta.25323.1" />
   </ItemGroup>
 
   <ItemGroup>
@@ -50,6 +50,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Update="FSharp.Core" Version="8.0.401" />
+    <PackageReference Update="FSharp.Core" Version="9.0.300" />
   </ItemGroup>
 </Project>

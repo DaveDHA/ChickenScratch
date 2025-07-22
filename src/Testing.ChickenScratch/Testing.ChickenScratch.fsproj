@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
@@ -9,25 +9,24 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="resources\ScratchImageTest.jpg" />
-    <EmbeddedResource Include="resources\TestDoc.html" />
-    <EmbeddedResource Include="resources\TestScript.js" />
-    <EmbeddedResource Include="resources\TestStyle.css" />
-    <Compile Include="TestingUtility.fs" />
-    <Compile Include="UtilityTests.fs" />
-    <Compile Include="TabDataTests.fs" />
-    <Compile Include="ScratchNodeTests.fs" />
-    <Compile Include="ScratchNodeBuilderTests.fs" />
-    <Compile Include="ScratchImageTests.fs" />
+	<EmbeddedResource Include="resources\ScratchImageTest.jpg" />
+	<EmbeddedResource Include="resources\TestDoc.html" />
+	<EmbeddedResource Include="resources\TestScript.js" />
+	<EmbeddedResource Include="resources\TestStyle.css" />
+	<Compile Include="TestingUtility.fs" />
+	<Compile Include="UtilityTests.fs" />
+	<Compile Include="TabDataTests.fs" />
+	<Compile Include="ScratchNodeTests.fs" />
+	<Compile Include="ScratchNodeBuilderTests.fs" />
+	<Compile Include="ScratchImageTests.fs" />
     <Compile Include="OtherContentTests.fs" />
-    <Compile Include="Program.fs" />
   </ItemGroup>
-
+	
   <ItemGroup>
-    <PackageReference Include="FsUnit.xUnit" Version="6.0.1" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.11.1" />
-    <PackageReference Include="xunit" Version="2.9.2" />
-    <PackageReference Include="xunit.runner.visualstudio" Version="2.8.2">
+    <PackageReference Include="FsUnit.xUnit" Version="7.1.1" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.14.1" />
+    <PackageReference Include="xunit" Version="2.9.3" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="3.1.3">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
@@ -42,7 +41,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Update="FSharp.Core" Version="8.0.401" />
+    <PackageReference Update="FSharp.Core" Version="9.0.300" />
   </ItemGroup>
 
 </Project>
